@@ -12,6 +12,7 @@ function Project({ title, explain, skill, i_do }: props) {
     return (
         <>
             <Container>
+                <SetButton>수정</SetButton>
                 <Title>{title}</Title>
                 <TextTitle>사용 기술</TextTitle>
                 <SkillsWrapper>
@@ -42,6 +43,7 @@ const Container = styled.div`
     border: 1px solid ${color.gray[400]};
     padding: 10px;
     box-shadow: 0 0 5px #00000040;
+    position: relative;
 `
 
 const Title = styled.h1`
@@ -75,4 +77,14 @@ const Hr = styled.hr`
     margin: 0 0 10px 0;
     padding: 0;
     width: 100%;
+`
+
+const SetButton = styled.button`
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 2px 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: ${color.gray[200]};
 `
