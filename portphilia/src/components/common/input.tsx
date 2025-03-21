@@ -68,21 +68,22 @@ function Input({
                     </TextAreaWrapper>
                 </Container>
             )}
-            {input == "markdown" && (
+            {input === "markdown" && (
                 <Container>
                     <Label>{label}</Label>
-                    <MDEditor
-                        height={300}
-                        className="w-100"
-                        value={value}
-                        onChange={(val) => {
-                            if (onTextAreaChange) {
-                                onTextAreaChange({
-                                    target: { value: val || "" },
-                                } as React.ChangeEvent<HTMLTextAreaElement>)
-                            }
-                        }}
-                    />
+                    <StyledMDEditor>
+                        <MDEditor
+                            className={StyledMDEditor}
+                            value={value}
+                            onChange={(val) => {
+                                if (onTextAreaChange) {
+                                    onTextAreaChange({
+                                        target: { value: val || "" },
+                                    } as React.ChangeEvent<HTMLTextAreaElement>)
+                                }
+                            }}
+                        />
+                    </StyledMDEditor>
                 </Container>
             )}
         </>
@@ -158,4 +159,30 @@ const TextArea = styled.textarea`
     margin-top: 15px;
     margin-left: 8px;
     margin-right: 8px;
+`
+
+const StyledMDEditor = styled.div`
+    width: 100%;
+    height: 300px;
+
+    .w-md-editor {
+        height: 100% !important;
+    }
+
+    .w-md-editor-text {
+        resize: none !important;
+        overflow: hidden !important;
+    }
+
+    .w-md-editor-textarea {
+        resize: none !important;
+        overflow: hidden !important;
+        display: block;
+    }
+
+    textarea {
+        resize: none !important;
+        overflow: hidden !important;
+        display: block;
+    }
 `
