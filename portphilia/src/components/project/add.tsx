@@ -31,7 +31,8 @@ const Container = styled.div`
 const Title = styled.p`
     font-size: 16px;
     font-weight: 600;
-    background: ${color.gray[200]};
+    background: ${color.blue[300]};
+    color: white;
     width: 120px;
     height: 35px;
     display: flex;
@@ -43,11 +44,11 @@ const Title = styled.p`
 const AddButton = styled.button`
     width: 35px;
     height: 35px;
-    background: ${color.gray[200]};
+    background: ${color.blue[300]};
     border-radius: 6px;
+    font-size: 24px;
     cursor: pointer;
-    color: ${color.gray[400]};
-    font-size: 16px;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;

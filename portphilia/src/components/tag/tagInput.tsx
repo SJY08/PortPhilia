@@ -108,7 +108,8 @@ const InputContainer = styled.div`
 const Title = styled.p`
     font-size: 16px;
     font-weight: 600;
-    background: ${color.gray[200]};
+    background: ${color.blue[300]};
+    color: white;
     width: 120px;
     height: 35px;
     display: flex;

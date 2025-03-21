@@ -40,15 +40,17 @@ const Container = styled.div`
     flex-direction: column;
     border-radius: 12px;
     background-color: white;
-    border: 1px solid ${color.gray[400]};
+    border: 1px solid ${color.blue[400]};
     padding: 10px;
     box-shadow: 0 0 5px #00000040;
     position: relative;
 `
 
 const Title = styled.h1`
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bolder;
+    color: ${color.blue[500]};
+    margin-bottom: 25px;
 `
 
 const Explain = styled.p`
@@ -64,13 +66,15 @@ const SkillsWrapper = styled.div`
 const Skill = styled.p`
     font-size: 14px;
     padding: 2px 4px;
-    background-color: ${color.gray[100]};
+    background-color: ${color.blue[200]};
+    color: white;
     border-radius: 8px;
 `
 
 const TextTitle = styled.h2`
     font-size: 16px;
     font-weight: bold;
+    color: ${color.blue[500]};
 `
 
 const Hr = styled.hr`
@@ -86,5 +90,6 @@ const SetButton = styled.button`
     padding: 2px 8px;
     border: none;
     border-radius: 4px;
-    background-color: ${color.gray[200]};
+    background-color: ${color.blue[300]};
+    color: white;
 `
