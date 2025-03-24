@@ -2,7 +2,7 @@ import styled from "styled-components"
 import Input from "../common/input"
 import { useState } from "react"
 
-function Introdue() {
+function Introduce() {
     const [intro, setIntro] = useState<string>("")
 
     return (
@@ -20,7 +20,7 @@ function Introdue() {
     )
 }
 
-export default Introdue
+export default Introduce
 
 const Container = styled.div`
     width: 100%;
