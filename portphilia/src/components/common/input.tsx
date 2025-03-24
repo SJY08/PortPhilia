@@ -64,7 +64,11 @@ function Input({
                 <Container>
                     <Label>{label}</Label>
                     <TextAreaWrapper>
-                        <TextArea placeholder={placeholder} />
+                        <TextArea
+                            value={value}
+                            onChange={onTextAreaChange}
+                            placeholder={placeholder}
+                        />
                     </TextAreaWrapper>
                 </Container>
             )}
