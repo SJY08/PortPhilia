@@ -2,32 +2,32 @@ import styled from "styled-components"
 import { color } from "../../styles/colors"
 
 interface props {
-    title: string
-    explain: string
-    skill: string[]
-    i_do: string
+    title?: string
+    explain?: string
+    skill?: string[]
+    i_do?: string
+    onClick?: () => void
 }
 
-function Project({ title, explain, skill, i_do }: props) {
+function Project({ title, explain, skill, i_do, onClick }: props) {
     return (
-        <>
-            <Container>
-                <SetButton>수정</SetButton>
-                <Title>{title}</Title>
-                <TextTitle>사용 기술</TextTitle>
-                <SkillsWrapper>
-                    {skill.map((v, i) => (
-                        <Skill key={i}>{v}</Skill>
-                    ))}
-                </SkillsWrapper>
-                <Hr />
-                <TextTitle>프로젝트 소개</TextTitle>
-                <Explain>{explain}</Explain>
-                <Hr />
-                <TextTitle>내가 한 일</TextTitle>
-                <Explain>{i_do}</Explain>
-            </Container>
-        </>
+        <Container>
+            <SetButton onClick={onClick}>수정</SetButton>
+
+            <Title>{title}</Title>
+            <TextTitle>사용 기술</TextTitle>
+            <SkillsWrapper>
+                {skill?.map((v, i) => (
+                    <Skill key={i}>{v}</Skill>
+                ))}
+            </SkillsWrapper>
+            <Hr />
+            <TextTitle>프로젝트 소개</TextTitle>
+            <Explain>{explain}</Explain>
+            <Hr />
+            <TextTitle>내가 한 일</TextTitle>
+            <Explain>{i_do}</Explain>
+        </Container>
     )
 }
 
