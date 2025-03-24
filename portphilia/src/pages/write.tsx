@@ -1,15 +1,28 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import ProjectModal from "../components/project/modal"
+import AddProjectModal from "../components/project/addModal"
 import generatePages from "../utils/generatePages"
+import EditProjectModal from "../components/project/editModal"
+
+interface project {
+    title: string
+    explain: string
+    skill: string[]
+    i_do: string
+}
 
 function Write() {
     const [license, setLicense] = useState<string[]>([])
     const [skill, setSkill] = useState<string[]>([])
     const [show, setShow] = useState<boolean>(false)
     const [pages, setPages] = useState<React.ReactNode[][]>([])
+    const [edit, setEdit] = useState<{
+        show: boolean
+        data: project | null
+    }>({ show: false, data: null })
 
-    const dummy = [
+    const [dummy, setDummy] = useState<project[]>([
+        // ✅ dummy를 state로 관리
         {
             title: "portphilia",
             explain: "it's a service to help writing portfolio for developers",
@@ -40,7 +53,7 @@ function Write() {
             skill: ["vue", "node.js"],
             i_do: "fullstack",
         },
-    ]
+    ])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -52,18 +65,53 @@ function Write() {
                 setShow,
                 setPages,
                 datas: dummy,
+                setEdit,
             })
         }, 200)
 
         return () => clearTimeout(timer)
-    }, [dummy, skill, license])
+    }, [skill, license, dummy]) // ✅ dummy 추가
+
+    const handleUpdate = (updatedData: project) => {
+        setDummy((prevDummy) =>
+            prevDummy.map((item) =>
+                item.title === edit.data?.title ? updatedData : item
+            )
+        )
+    }
 
     return (
         <>
-            {show && <ProjectModal setFunc={setShow} show={show} />}
+            {edit.show && edit.data && (
+                <EditProjectModal
+                    setFunc={setEdit}
+                    show={edit.show}
+                    title={edit.data.title}
+                    explain={edit.data.explain}
+                    skill={edit.data.skill}
+                    i_do={edit.data.i_do}
+                    onClick={() => {
+                        const updatedData = {
+                            title: edit.data?.title || "",
+                            explain: edit.data?.explain || "",
+                            skill: edit.data?.skill || [],
+                            i_do: edit.data?.i_do || "",
+                        }
+                        handleUpdate(updatedData) // ✅ 데이터 업데이트 추가
+                    }}
+                />
+            )}
+
+            {show && (
+                <AddProjectModal
+                    setFunc={() => setShow((prev) => !prev)}
+                    show={show}
+                />
+            )}
+
             <Background>
-                {pages.map((page, index) => (
-                    <Container key={index}>{page}</Container>
+                {pages.map((page, idx) => (
+                    <Container key={idx}>{page}</Container>
                 ))}
             </Background>
         </>
@@ -89,7 +137,7 @@ const Container = styled.div`
     background: white;
     box-shadow: 0px 0px 20px #00000020;
     box-sizing: border-box;
-    padding: 80px; // 🔥 padding을 포함한 전체 높이
+    padding: 80px;
     display: flex;
     flex-direction: column;
     gap: 30px;
