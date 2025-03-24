@@ -16,6 +16,9 @@ interface props {
     setShow: React.Dispatch<React.SetStateAction<boolean>>
     setPages: React.Dispatch<React.SetStateAction<React.ReactNode[][]>>
     datas: project[]
+    setEdit: React.Dispatch<
+        React.SetStateAction<{ show: boolean; data: project | null }>
+    >
 }
 
 interface project {
@@ -33,11 +36,12 @@ const generatePages = ({
     setShow,
     setPages,
     datas,
+    setEdit,
 }: props) => {
     let currentPage: React.ReactNode[] = []
     let newPages: React.ReactNode[][] = []
     let currentHeight = 0
-    const maxPageHeight = 1100 - 160 // 🔥 padding 제외한 실제 콘텐츠 영역 높이
+    const maxPageHeight = 1100 - 160
 
     const elements = [
         <>
@@ -54,7 +58,22 @@ const generatePages = ({
             <TagInput label="자격증" tags={license} setTags={setLicense} />
         </TagContainer>,
         <AddProject onClick={() => setShow(true)} />,
-        ...datas.map((project, index) => <Project key={index} {...project} />),
+        ...datas.map((project, index) => (
+            <Project
+                key={index}
+                onClick={() =>
+                    setEdit({
+                        show: true,
+                        data: {
+                            ...project, // ✅ 안전한 복사 추가
+                            explain: project.explain || "",
+                            i_do: project.i_do || "",
+                        },
+                    })
+                }
+                {...project}
+            />
+        )),
     ]
 
     elements.forEach((element) => {
