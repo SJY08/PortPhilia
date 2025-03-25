@@ -3,6 +3,7 @@ import styled from "styled-components"
 import AddProjectModal from "../components/project/addModal"
 import generatePages from "../utils/generatePages"
 import EditProjectModal from "../components/project/editModal"
+import SideBar from "../components/common/sidebar"
 
 interface project {
     title: string
@@ -22,7 +23,6 @@ function Write() {
     }>({ show: false, data: null })
 
     const [dummy, setDummy] = useState<project[]>([
-        // ✅ dummy를 state로 관리
         {
             title: "portphilia",
             explain: "it's a service to help writing portfolio for developers",
@@ -82,6 +82,7 @@ function Write() {
 
     return (
         <>
+            <SideBar />
             {edit.show && edit.data && (
                 <EditProjectModal
                     setFunc={setEdit}
