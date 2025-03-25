@@ -24,7 +24,7 @@ function Tag({ tag, index, handleTagDelete }: props) {
 export default Tag
 
 const TaggedContent = styled.div`
-    height: 30px;
+    min-height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
