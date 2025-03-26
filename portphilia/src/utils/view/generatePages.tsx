@@ -42,9 +42,8 @@ const generatePages = async ({
         <TagContainer title="사용기술" tags={skill} />,
         <TagContainer title="자격증" tags={license} />,
         ...datas.map((v, i) => (
-            <Wrapper>
+            <Wrapper key={i}>
                 <Project
-                    key={i}
                     title={v.title}
                     skills={v.skill}
                     explain={v.explain}
@@ -57,12 +56,14 @@ const generatePages = async ({
     elements.forEach((element) => {
         const elementHeight = measureElementHeight(element) || 250
 
-        if (elementHeight > maxPageHeight) {
+        const wrapperHeight = maxPageHeight - 40
+
+        if (elementHeight > wrapperHeight) {
             newPages.push([...currentPage])
             newPages.push([element])
             currentPage = []
             currentHeight = 0
-        } else if (currentHeight + elementHeight > maxPageHeight) {
+        } else if (currentHeight + elementHeight > wrapperHeight) {
             newPages.push([...currentPage])
             currentPage = [element]
             currentHeight = elementHeight
@@ -86,4 +87,5 @@ const Wrapper = styled.div`
     border-radius: 24px;
     box-sizing: border-box;
     padding: 20px;
+    overflow: hidden;
 `

@@ -6,7 +6,7 @@ function measureElementHeight(element: ReactNode): number {
     document.body.appendChild(tempContainer)
 
     Object.assign(tempContainer.style, {
-        width: "680px", // 🔥 padding 제외한 실제 콘텐츠 영역 기준
+        width: "680px",
         position: "absolute",
         visibility: "hidden",
         display: "block",
