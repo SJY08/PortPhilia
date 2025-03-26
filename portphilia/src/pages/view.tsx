@@ -4,6 +4,7 @@ import Page from "../components/view/page"
 import { color } from "../styles/colors"
 import { useState, useEffect } from "react"
 import generatePages from "../utils/view/generatePages"
+import exportToPDF from "../utils/savePDF"
 
 interface project {
     title: string
@@ -80,10 +81,12 @@ function View() {
 
     return (
         <>
-            <SideBar />
+            <SideBar onClick={exportToPDF} />
             <Container>
                 {pages.map((page, idx) => (
-                    <Page key={idx}>{page}</Page>
+                    <Page key={idx} className="pdf-page">
+                        {page}
+                    </Page>
                 ))}
             </Container>
         </>

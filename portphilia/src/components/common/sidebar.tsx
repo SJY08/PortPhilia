@@ -2,7 +2,11 @@ import Nav from "react-bootstrap/Nav"
 import styled from "styled-components"
 import { useLocation, Link } from "react-router-dom" // react-router-dom 추가
 
-function SideBar() {
+interface props {
+    onClick?: () => void
+}
+
+function SideBar({ onClick }: props) {
     const location = useLocation() // 현재 URL 경로 가져오기
 
     return (
@@ -26,7 +30,7 @@ function SideBar() {
                         미리보기
                     </Nav.Link>
                 </Nav.Item>
-                <StyledNavLink>다운로드</StyledNavLink>
+                <StyledNavLink onClick={onClick}>다운로드</StyledNavLink>
             </Nav>
         </Container>
     )

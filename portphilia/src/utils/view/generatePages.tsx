@@ -41,19 +41,17 @@ const generatePages = async ({
         <Introduce text={text} />,
         <TagContainer title="사용기술" tags={skill} />,
         <TagContainer title="자격증" tags={license} />,
-        ...datas.map((v, i) => {
-            return (
-                <Wrapper>
-                    <Project
-                        key={i}
-                        title={v.title}
-                        skills={v.skill}
-                        explain={v.explain}
-                        i_do={v.i_do}
-                    />
-                </Wrapper>
-            )
-        }),
+        ...datas.map((v, i) => (
+            <Wrapper>
+                <Project
+                    key={i}
+                    title={v.title}
+                    skills={v.skill}
+                    explain={v.explain}
+                    i_do={v.i_do}
+                />
+            </Wrapper>
+        )),
     ]
 
     elements.forEach((element) => {

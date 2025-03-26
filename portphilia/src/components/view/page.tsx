@@ -3,10 +3,11 @@ import styled from "styled-components"
 
 interface props {
     children?: React.ReactNode
+    className?: string // className 추가
 }
 
-function Page({ children }: props) {
-    return <Container>{children}</Container>
+function Page({ children, className }: props) {
+    return <Container className={className}>{children}</Container>
 }
 
 export default Page
