@@ -7,7 +7,7 @@ interface props {
 }
 
 function SideBar({ onClick }: props) {
-    const location = useLocation() // 현재 URL 경로 가져오기
+    const location = useLocation()
 
     return (
         <Container>
@@ -16,7 +16,7 @@ function SideBar({ onClick }: props) {
                     <Nav.Link
                         as={Link}
                         to="/write"
-                        active={location.pathname === "/write"} // URL 경로에 따라 활성화
+                        active={location.pathname === "/write"}
                     >
                         작성하기
                     </Nav.Link>
@@ -25,12 +25,14 @@ function SideBar({ onClick }: props) {
                     <Nav.Link
                         as={Link}
                         to="/view"
-                        active={location.pathname === "/view"} // URL 경로에 따라 활성화
+                        active={location.pathname === "/view"}
                     >
                         미리보기
                     </Nav.Link>
                 </Nav.Item>
-                <StyledNavLink onClick={onClick}>다운로드</StyledNavLink>
+                {location.pathname == "/view" && (
+                    <StyledNavLink onClick={onClick}>다운로드</StyledNavLink>
+                )}
             </Nav>
         </Container>
     )
