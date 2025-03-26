@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import AddProjectModal from "../components/project/addModal"
+import AddProjectModal from "../components/write/project/addModal"
 import generatePages from "../utils/generatePages"
-import EditProjectModal from "../components/project/editModal"
+import EditProjectModal from "../components/write/project/editModal"
 import SideBar from "../components/common/sidebar"
 
 interface project {

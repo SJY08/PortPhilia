@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
-import Input from "../common/input"
-import TagInput from "../tag/tagInput"
+import Input from "../../common/input"
+import TagInput from "../../write/tag/tagInput"
 import styled from "styled-components"
 
 interface project {

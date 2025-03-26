@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { color } from "../../styles/colors"
+import { color } from "../../../styles/colors"
 import { IoAddOutline } from "react-icons/io5"
 
 interface props {

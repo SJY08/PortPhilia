@@ -1,7 +1,7 @@
 import { useState } from "react"
 import styled from "styled-components"
-import { color } from "../../styles/colors"
-import Input from "../common/input"
+import { color } from "../../../styles/colors"
+import Input from "../../common/input"
 import Tag from "./tag"
 
 interface Props {

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Input from "../common/input"
+import Input from "../../common/input"
 
 function Inform() {
     return (

@@ -1,11 +1,11 @@
 import styled from "styled-components"
-import ProfileImage from "../components/profile/image"
-import Inform from "../components/profile/inform"
-import Introduce from "../components/profile/introduce"
-import TagInput from "../components/tag/tagInput"
-import AddProject from "../components/project/add"
+import ProfileImage from "../components/write/profile/image"
+import Inform from "../components/write/profile/inform"
+import Introduce from "../components/write/profile/introduce"
+import TagInput from "../components/write/tag/tagInput"
+import AddProject from "../components/write/project/add"
 import measureElementHeight from "./height"
-import Project from "../components/project/project"
+import Project from "../components/write/project/project"
 import React from "react"
 
 interface props {
