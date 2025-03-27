@@ -4,9 +4,30 @@ import Form from "../components/common/form"
 import Input from "../components/common/input"
 import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import AuthService from "../apis/auth"
 
 function Signup() {
     const navigate = useNavigate()
+    const [name, setName] = useState<string>("")
+    const [username, setUsername] = useState<string>("")
+    const [password, setPassowrd] = useState<string>("")
+
+    const submitHandler = async () => {
+        try {
+            if (name && username && password) {
+                const result = await AuthService.register({
+                    name,
+                    username,
+                    password,
+                })
+                console.log(result)
+                if (result == 200 || result == 201) navigate("/login")
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     return (
         <>
@@ -14,14 +35,33 @@ function Signup() {
                 <Form>
                     <Title>회원가입</Title>
                     <InputWrapper>
-                        <Input label="이름" />
-                        <Input label="아이디" />
-                        <Input label="비밀번호" type="password" />
+                        <Input
+                            label="이름"
+                            value={name}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setName(e.target.value)}
+                        />
+                        <Input
+                            label="아이디"
+                            value={username}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setUsername(e.target.value)}
+                        />
+                        <Input
+                            label="비밀번호"
+                            value={password}
+                            type="password"
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setPassowrd(e.target.value)}
+                        />
                     </InputWrapper>
                     <ButtonWrapper>
                         <Button
                             variant="primary"
-                            onClick={() => navigate("/login")}
+                            onClick={submitHandler}
                             className="w-100"
                         >
                             회원가입

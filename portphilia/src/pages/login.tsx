@@ -5,12 +5,20 @@ import Input from "../components/common/input"
 import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { useLogin } from "../apis/auth"
+import AuthService from "../apis/auth"
 
 function Login() {
     const navigate = useNavigate()
     const [username, setUsername] = useState<string>("")
     const [password, setPassowrd] = useState<string>("")
+
+    const submitHandler = async () => {
+        if (username && password) {
+            const result = await AuthService.login({ username, password })
+            console.log(result)
+            if (result == 200) navigate("/write")
+        }
+    }
 
     return (
         <>
@@ -37,7 +45,7 @@ function Login() {
                     <ButtonWrapper>
                         <Button
                             variant="primary"
-                            onClick={() => navigate("/write")}
+                            onClick={submitHandler}
                             className="w-100"
                         >
                             로그인
