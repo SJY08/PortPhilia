@@ -38,7 +38,7 @@ function Input({
                             onChange={onChange}
                             onKeyDown={onKeyDown}
                             type={
-                                type == "passowrd"
+                                type == "password"
                                     ? show
                                         ? "text"
                                         : "password"
@@ -144,6 +144,7 @@ const Icon = styled.div`
     width: 30px;
     height: 30px;
     background: none;
+    font-size: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
