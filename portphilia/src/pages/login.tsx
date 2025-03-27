@@ -4,9 +4,13 @@ import Form from "../components/common/form"
 import Input from "../components/common/input"
 import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { useLogin } from "../apis/auth"
 
 function Login() {
     const navigate = useNavigate()
+    const [username, setUsername] = useState<string>("")
+    const [password, setPassowrd] = useState<string>("")
 
     return (
         <>
@@ -14,8 +18,21 @@ function Login() {
                 <Form>
                     <Title>로그인</Title>
                     <InputWrapper>
-                        <Input label="아이디" />
-                        <Input label="비밀번호" type="password" />
+                        <Input
+                            label="아이디"
+                            value={username}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setUsername(e.target.value)}
+                        />
+                        <Input
+                            label="비밀번호"
+                            value={password}
+                            type="password"
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setPassowrd(e.target.value)}
+                        />
                     </InputWrapper>
                     <ButtonWrapper>
                         <Button

@@ -1,4 +1,3 @@
-// tempCookie.ts
 class TempCookie {
     private accessToken: string | null
     private refreshToken: string | null
@@ -6,41 +5,37 @@ class TempCookie {
     constructor() {
         this.accessToken = null
         this.refreshToken = null
-        this.loadTokens() // 새로고침 시 localStorage에서 토큰 불러오기
+        this.loadTokens()
     }
 
-    // 액세스 토큰과 리프래시 토큰 모두 저장
-    setTokens(accessToken: string, refreshToken: string) {
-        // "Bearer " 접두어 제거 후 저장하고, 필요시 getAccessToken()에서 다시 붙임
-        this.accessToken = accessToken.startsWith("Bearer ")
-            ? accessToken.slice(7)
-            : accessToken
-        this.refreshToken = refreshToken
+    setTokens(tokens: { accessToken: string; refreshToken: string }) {
+        // accessToken이 "Bearer "로 시작할 경우 제거
+        this.accessToken = tokens.accessToken.startsWith("Bearer ")
+            ? tokens.accessToken.slice(7)
+            : tokens.accessToken
+        this.refreshToken = tokens.refreshToken
         localStorage.setItem("accessToken", this.accessToken)
         localStorage.setItem("refreshToken", this.refreshToken)
     }
 
-    getAccessToken(): string | null {
+    // 단일 accessToken 설정 (리프래시 토큰은 그대로 유지)
+    setAccessToken(token: string) {
+        this.accessToken = token.startsWith("Bearer ") ? token.slice(7) : token
+        localStorage.setItem("accessToken", this.accessToken)
+    }
+
+    getAccessToken() {
         if (!this.accessToken) {
             this.loadTokens()
         }
         return this.accessToken ? `Bearer ${this.accessToken}` : null
     }
 
-    getRefreshToken(): string | null {
+    getRefreshToken() {
         if (!this.refreshToken) {
             this.loadTokens()
         }
         return this.refreshToken
-    }
-
-    loadTokens() {
-        if (typeof window !== "undefined") {
-            const storedAccess = localStorage.getItem("accessToken")
-            const storedRefresh = localStorage.getItem("refreshToken")
-            this.accessToken = storedAccess || null
-            this.refreshToken = storedRefresh || null
-        }
     }
 
     clearTokens() {
@@ -49,6 +44,13 @@ class TempCookie {
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
     }
+
+    loadTokens() {
+        if (typeof window !== "undefined") {
+            this.accessToken = localStorage.getItem("accessToken")
+            this.refreshToken = localStorage.getItem("refreshToken")
+        }
+    }
 }
 
-export const tempCookie: TempCookie = new TempCookie()
+export const tempCookie = new TempCookie()

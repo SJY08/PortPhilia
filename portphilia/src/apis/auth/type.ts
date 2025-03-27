@@ -1,20 +1,16 @@
-export interface Login {
+export interface LoginData {
     username: string
     password: string
 }
 
-export interface LoginResponse {
-    message: string
-    accessToken: string
-    refreshToken: string
-}
-
-export interface Register {
+export interface RegisterData {
     name: string
     username: string
     password: string
 }
 
-export interface RegisterResponse {
+export interface AuthResponse {
+    accessToken: string
+    refreshToken: string
     message: string
 }
