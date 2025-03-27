@@ -50,3 +50,6 @@ export const verifyToken = async (
         res.status(401).json({ message: "토큰이 유효하지 않습니다" })
     }
 }
+
+// verifyToken을 authenticate라는 이름으로도 내보내기
+export const authenticate = verifyToken

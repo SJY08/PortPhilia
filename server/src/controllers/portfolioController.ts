@@ -10,7 +10,7 @@ export const getPortfolio = async (req: AuthRequest, res: Response) => {
 
     try {
         const [rows]: any = await db.query(
-            "SELECT education, short_intro, bio, tech_stack, certifications FROM users WHERE id = ?",
+            "SELECT education, short_intro, bio, tech_stack, certifications, profile_image_url FROM users WHERE id = ?",
             [userId]
         )
 
@@ -24,8 +24,13 @@ export const getPortfolio = async (req: AuthRequest, res: Response) => {
             education: userPortfolio.education,
             short_intro: userPortfolio.short_intro,
             bio: userPortfolio.bio,
-            tech_stack: JSON.parse(userPortfolio.tech_stack),
-            certifications: JSON.parse(userPortfolio.certifications),
+            tech_stack: userPortfolio.tech_stack
+                ? JSON.parse(userPortfolio.tech_stack)
+                : [],
+            certifications: userPortfolio.certifications
+                ? JSON.parse(userPortfolio.certifications)
+                : [],
+            profile_image_url: userPortfolio.profile_image_url,
         })
     } catch (error) {
         console.error(error)
@@ -40,16 +45,19 @@ export const updatePortfolio = async (req: AuthRequest, res: Response) => {
     }
 
     const { education, short_intro, bio, tech_stack, certifications } = req.body
+    // 업로드된 파일이 있다면 해당 파일의 경로를 저장, 없으면 기존 값을 유지
+    const profileImageUrl = req.file ? `/uploads/${req.file.filename}` : null
 
     try {
         const [result]: any = await db.query(
-            "UPDATE users SET education = ?, short_intro = ?, bio = ?, tech_stack = ?, certifications = ? WHERE id = ?",
+            "UPDATE users SET education = ?, short_intro = ?, bio = ?, tech_stack = ?, certifications = ?, profile_image_url = COALESCE(?, profile_image_url) WHERE id = ?",
             [
                 education,
                 short_intro,
                 bio,
                 JSON.stringify(tech_stack),
                 JSON.stringify(certifications),
+                profileImageUrl,
                 userId,
             ]
         )

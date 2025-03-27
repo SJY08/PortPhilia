@@ -4,4 +4,5 @@ export interface Portfolio {
     bio: string
     tech_stack: string[]
     certifications: string[]
+    profile_image_url?: string
 }

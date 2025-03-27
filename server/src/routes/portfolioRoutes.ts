@@ -3,11 +3,12 @@ import {
     getPortfolio,
     updatePortfolio,
 } from "../controllers/portfolioController"
-import { verifyToken } from "../middleware/authMiddleware"
+import { upload } from "../middleware/uploadMiddleware"
+import { authenticate } from "../middleware/authMiddleware"
 
 const router = express.Router()
 
-router.get("/", verifyToken, getPortfolio)
-router.put("/", verifyToken, updatePortfolio)
+router.get("/", authenticate, getPortfolio)
+router.put("/", authenticate, upload.single("profile_image"), updatePortfolio)
 
 export default router
