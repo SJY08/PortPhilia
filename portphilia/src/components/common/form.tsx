@@ -24,4 +24,5 @@ const Container = styled.div`
     flex-direction: column;
     box-shadow: 0px 0px 5px ${color.gray[100]};
     position: relative;
+    gap: 50px;
 `

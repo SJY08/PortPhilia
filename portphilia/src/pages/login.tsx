@@ -12,28 +12,26 @@ function Login() {
         <>
             <Background>
                 <Form>
-                    <Container>
-                        <Title>로그인</Title>
-                        <InputWrapper>
-                            <Input label="아이디" />
-                            <Input label="비밀번호" type="password" />
-                        </InputWrapper>
-                        <ButtonWrapper>
-                            <Button
-                                variant="primary"
-                                onClick={() => navigate("/write")}
-                                className="w-100"
-                            >
-                                로그인
-                            </Button>
-                            <Explain>
-                                회원이 아니신가요?{" "}
-                                <Accent onClick={() => navigate("/signup")}>
-                                    회원가입
-                                </Accent>
-                            </Explain>
-                        </ButtonWrapper>
-                    </Container>
+                    <Title>로그인</Title>
+                    <InputWrapper>
+                        <Input label="아이디" />
+                        <Input label="비밀번호" type="password" />
+                    </InputWrapper>
+                    <ButtonWrapper>
+                        <Button
+                            variant="primary"
+                            onClick={() => navigate("/write")}
+                            className="w-100"
+                        >
+                            로그인
+                        </Button>
+                        <Explain>
+                            회원이 아니신가요?{" "}
+                            <Accent onClick={() => navigate("/signup")}>
+                                회원가입
+                            </Accent>
+                        </Explain>
+                    </ButtonWrapper>
                 </Form>
             </Background>
         </>
@@ -41,15 +39,6 @@ function Login() {
 }
 
 export default Login
-
-const Container = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-    justify-content: center;
-    align-items: center;
-`
 
 const Title = styled.h1`
     font-size: 30px;

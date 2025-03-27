@@ -12,29 +12,27 @@ function Signup() {
         <>
             <Background>
                 <Form>
-                    <Container>
-                        <Title>회원가입</Title>
-                        <InputWrapper>
-                            <Input label="이름" />
-                            <Input label="아이디" />
-                            <Input label="비밀번호" type="password" />
-                        </InputWrapper>
-                        <ButtonWrapper>
-                            <Button
-                                variant="primary"
-                                onClick={() => navigate("/login")}
-                                className="w-100"
-                            >
-                                회원가입
-                            </Button>
-                            <Explain>
-                                회원이 이신가요?{" "}
-                                <Accent onClick={() => navigate("/login")}>
-                                    로그인
-                                </Accent>
-                            </Explain>
-                        </ButtonWrapper>
-                    </Container>
+                    <Title>회원가입</Title>
+                    <InputWrapper>
+                        <Input label="이름" />
+                        <Input label="아이디" />
+                        <Input label="비밀번호" type="password" />
+                    </InputWrapper>
+                    <ButtonWrapper>
+                        <Button
+                            variant="primary"
+                            onClick={() => navigate("/login")}
+                            className="w-100"
+                        >
+                            회원가입
+                        </Button>
+                        <Explain>
+                            회원이 이신가요?{" "}
+                            <Accent onClick={() => navigate("/login")}>
+                                로그인
+                            </Accent>
+                        </Explain>
+                    </ButtonWrapper>
                 </Form>
             </Background>
         </>
@@ -42,15 +40,6 @@ function Signup() {
 }
 
 export default Signup
-
-const Container = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-    justify-content: center;
-    align-items: center;
-`
 
 const Title = styled.h1`
     font-size: 30px;
