@@ -6,11 +6,20 @@ import { useState, useEffect } from "react"
 import generatePages from "../utils/view/generatePages"
 import exportToPDF from "../utils/savePDF"
 
-interface project {
+interface Project {
     title: string
     explain: string
     skill: string[]
     i_do: string
+}
+
+interface ProfileData {
+    image: string | null
+    name: string
+    birth: string
+    phone: string
+    email: string
+    edu: string
 }
 
 function View() {
@@ -32,7 +41,7 @@ function View() {
 - 실습 활동을 통해 항상 새로운 것에 도전하려 노력합니다.
 - 원하는 기능 구현을 위해 자료를 찾아보고, 코드에 대해 이해를 하는 것에 재미를 느낍니다.`)
 
-    const [dummy, setDummy] = useState<project[]>([
+    const [dummy, setDummy] = useState<Project[]>([
         {
             title: "portphilia",
             explain: "it's a service to help writing portfolio for developers",
@@ -65,6 +74,16 @@ function View() {
         },
     ])
 
+    // Profile 컴포넌트에 필요한 데이터 (실제 데이터로 대체 가능)
+    const profileData: ProfileData = {
+        image: null, // 이미지 URL이 있을 경우 이곳에 넣어주세요.
+        name: "서지유",
+        birth: "2000-01-01",
+        phone: "010-0000-0000",
+        email: "example@example.com",
+        edu: "대덕소프트웨어마이스터고등학교",
+    }
+
     useEffect(() => {
         const timer = setTimeout(() => {
             generatePages({
@@ -73,11 +92,12 @@ function View() {
                 setPages,
                 datas: dummy,
                 text,
+                profileData,
             })
         }, 200)
 
         return () => clearTimeout(timer)
-    }, [skill, license, dummy, text, pages])
+    }, [skill, license, dummy, text, profileData]) // pages 제거
 
     return (
         <>

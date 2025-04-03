@@ -1,23 +1,30 @@
 import styled from "styled-components"
 import { color } from "../../../styles/colors"
 
-function Profile() {
-    return (
-        <>
-            <Container>
-                <Image />
+interface ProfileProps {
+    image: string | null
+    name: string
+    birth: string
+    phone: string
+    email: string
+    edu: string
+}
 
-                <InfromContainer>
-                    <Name>서지유</Name>
-                    <TextContainer>
-                        <Text>2008-08-28</Text>
-                        <Text>010-4271-0306</Text>
-                        <Text>jiyuseo2008@gmail.com</Text>
-                        <Text>대덕소프트웨어마이스터고등학교(졸업예정)</Text>
-                    </TextContainer>
-                </InfromContainer>
-            </Container>
-        </>
+function Profile({ image, name, birth, phone, email, edu }: ProfileProps) {
+    return (
+        <Container>
+            <Image image={image} />
+
+            <InfromContainer>
+                <Name>{name}</Name>
+                <TextContainer>
+                    <Text>{birth}</Text>
+                    <Text>{phone}</Text>
+                    <Text>{email}</Text>
+                    <Text>{edu}</Text>
+                </TextContainer>
+            </InfromContainer>
+        </Container>
     )
 }
 
@@ -30,11 +37,18 @@ const Container = styled.div`
     align-items: center;
 `
 
-const Image = styled.div`
+interface ImageProps {
+    image: string | null
+}
+
+const Image = styled.div<ImageProps>`
     width: 250px;
     height: 250px;
     border-radius: 12px;
     background-color: ${color.gray[400]};
+    background-image: ${({ image }) => (image ? `url(${image})` : "none")};
+    background-size: cover;
+    background-position: center;
 `
 
 const InfromContainer = styled.div`
