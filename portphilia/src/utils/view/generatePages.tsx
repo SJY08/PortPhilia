@@ -33,6 +33,7 @@ interface Props {
     datas: Project[]
     text: string
     profileData: ProfileData
+    intro: string
 }
 
 const generatePages = ({
@@ -42,6 +43,7 @@ const generatePages = ({
     datas,
     text,
     profileData,
+    intro,
 }: Props) => {
     let currentPage: React.ReactNode[] = []
     let newPages: React.ReactNode[][] = []
@@ -59,7 +61,7 @@ const generatePages = ({
             email={profileData.email}
             edu={profileData.edu}
         />,
-        <ShortIntro key="shortIntro" />,
+        <ShortIntro text={intro} key="shortIntro" />,
         <Introduce key="introduce" text={text} />,
         <TagContainer key="tag1" title="사용기술" tags={skill} />,
         <TagContainer key="tag2" title="자격증" tags={license} />,

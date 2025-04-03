@@ -1,10 +1,14 @@
 import styled from "styled-components"
 import { color } from "../../../styles/colors"
 
-function ShortIntro() {
+interface props {
+    text: string
+}
+
+function ShortIntro({ text }: props) {
     return (
         <>
-            <Intro>노력하고 성장하며 공부하는 프론트엔드 개발자입니다.</Intro>
+            <Intro>{text}</Intro>
         </>
     )
 }

@@ -41,6 +41,10 @@ function View() {
 - 실습 활동을 통해 항상 새로운 것에 도전하려 노력합니다.
 - 원하는 기능 구현을 위해 자료를 찾아보고, 코드에 대해 이해를 하는 것에 재미를 느낍니다.`)
 
+    const [intro, setIntro] = useState<string>(
+        "노력하고 성장하며 공부하는 프론트엔드 개발자입니다."
+    )
+
     const [dummy, setDummy] = useState<Project[]>([
         {
             title: "portphilia",
@@ -74,9 +78,8 @@ function View() {
         },
     ])
 
-    // Profile 컴포넌트에 필요한 데이터 (실제 데이터로 대체 가능)
     const profileData: ProfileData = {
-        image: null, // 이미지 URL이 있을 경우 이곳에 넣어주세요.
+        image: null,
         name: "서지유",
         birth: "2000-01-01",
         phone: "010-0000-0000",
@@ -93,6 +96,7 @@ function View() {
                 datas: dummy,
                 text,
                 profileData,
+                intro,
             })
         }, 200)
 
