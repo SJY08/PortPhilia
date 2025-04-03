@@ -1,15 +1,17 @@
-import express from "express"
+import { Router } from "express"
 import {
-    addProject,
+    getProjects,
+    getProjectById,
     updateProject,
     deleteProject,
 } from "../controllers/projectController"
-import { verifyToken } from "../middleware/authMiddleware"
+import { authenticateToken } from "../middleware/authenticate"
 
-const router = express.Router()
+const router = Router()
 
-router.post("/", verifyToken, addProject)
-router.put("/:id", verifyToken, updateProject)
-router.delete("/:id", verifyToken, deleteProject)
+router.get("/", authenticateToken, getProjects)
+router.get("/:id", authenticateToken, getProjectById)
+router.put("/:id", authenticateToken, updateProject)
+router.delete("/:id", authenticateToken, deleteProject)
 
 export default router

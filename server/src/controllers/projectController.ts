@@ -1,124 +1,79 @@
-import { Response } from "express"
-import { db } from "../db"
-import { AuthRequest } from "../middleware/authMiddleware"
+import { Request, Response } from "express"
+import prisma from "../prisma/client"
+import { AuthRequest } from "../middleware/authenticate"
 
-export const getProjects = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id
-    if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
-
+export async function getProjects(req: AuthRequest, res: Response) {
     try {
-        const [projects]: any = await db.query(
-            "SELECT * FROM projects WHERE user_id = ?",
-            [userId]
-        )
-
-        return res.status(200).json({ projects })
+        const projects = await prisma.project.findMany({
+            where: { user_id: req.user!.userId },
+        })
+        res.json(projects)
     } catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Server error" })
+        res.status(500).json({ error: "서버 에러" })
     }
 }
 
-export const getProjectById = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id
-    const projectId = req.params.id
-    if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
-
+export async function getProjectById(req: AuthRequest, res: Response) {
+    const projectId = Number(req.params.id)
     try {
-        const [projects]: any = await db.query(
-            "SELECT * FROM projects WHERE id = ? AND user_id = ?",
-            [projectId, userId]
-        )
-
-        if (projects.length === 0) {
-            return res.status(404).json({ message: "Project not found" })
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+        })
+        if (!project || project.user_id !== req.user!.userId) {
+            return res
+                .status(404)
+                .json({
+                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+                })
         }
-
-        return res.status(200).json({ project: projects[0] })
+        res.json(project)
     } catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Server error" })
+        res.status(500).json({ error: "서버 에러" })
     }
 }
 
-export const addProject = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id
-    if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
-
-    const { title, description, link, tech_stack } = req.body
-
+export async function updateProject(req: AuthRequest, res: Response) {
+    const projectId = Number(req.params.id)
+    const updateData = req.body
     try {
-        await db.query(
-            "INSERT INTO projects (user_id, title, description, link, tech_stack) VALUES (?, ?, ?, ?, ?)",
-            [userId, title, description, link, JSON.stringify(tech_stack)]
-        )
-
-        return res.status(201).json({ message: "Project added successfully" })
-    } catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Server error" })
-    }
-}
-
-export const updateProject = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id
-    const projectId = req.params.id
-    if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
-
-    const { title, description, link, tech_stack } = req.body
-
-    try {
-        const [result]: any = await db.query(
-            "UPDATE projects SET title = ?, description = ?, link = ?, tech_stack = ? WHERE id = ? AND user_id = ?",
-            [
-                title,
-                description,
-                link,
-                JSON.stringify(tech_stack),
-                projectId,
-                userId,
-            ]
-        )
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Project not found" })
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+        })
+        if (!project || project.user_id !== req.user!.userId) {
+            return res
+                .status(404)
+                .json({
+                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+                })
         }
-
-        return res.status(200).json({ message: "Project updated successfully" })
+        const updatedProject = await prisma.project.update({
+            where: { id: projectId },
+            data: updateData,
+        })
+        res.json(updatedProject)
     } catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Server error" })
+        res.status(500).json({ error: "서버 에러" })
     }
 }
 
-export const deleteProject = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id
-    const projectId = req.params.id
-    if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
-
+export async function deleteProject(req: AuthRequest, res: Response) {
+    const projectId = Number(req.params.id)
     try {
-        const [result]: any = await db.query(
-            "DELETE FROM projects WHERE id = ? AND user_id = ?",
-            [projectId, userId]
-        )
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Project not found" })
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+        })
+        if (!project || project.user_id !== req.user!.userId) {
+            return res
+                .status(404)
+                .json({
+                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+                })
         }
-
-        return res.status(200).json({ message: "Project deleted successfully" })
+        await prisma.project.delete({
+            where: { id: projectId },
+        })
+        res.json({ message: "프로젝트가 삭제되었습니다." })
     } catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Server error" })
+        res.status(500).json({ error: "서버 에러" })
     }
 }
