@@ -1,7 +1,6 @@
-// src/services/PortfolioService.ts
 import { AxiosError } from "axios"
 import { instance } from ".."
-import { Portfolio } from "./type"
+import { Portfolio } from "../portfolio/type"
 
 export default class PortfolioService {
     // 포트폴리오 정보 가져오기
@@ -15,10 +14,29 @@ export default class PortfolioService {
         }
     }
 
-    // 포트폴리오 정보 업데이트
-    static async updatePortfolio(data: Portfolio): Promise<number> {
+    // 포트폴리오 정보 업데이트 (선택적으로 이미지 파일 포함)
+    static async updatePortfolio(
+        data: Portfolio,
+        imageFile?: File
+    ): Promise<number> {
         try {
-            const response = await instance.put("/portfolio", data)
+            const formData = new FormData()
+            formData.append("education", data.education)
+            formData.append("short_intro", data.short_intro)
+            formData.append("bio", data.bio)
+            formData.append("tech_stack", JSON.stringify(data.tech_stack))
+            formData.append(
+                "certifications",
+                JSON.stringify(data.certifications)
+            )
+            if (imageFile) {
+                formData.append("profile_image", imageFile)
+            }
+            const response = await instance.put("/portfolio", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             return response.status
         } catch (error) {
             if (error instanceof AxiosError)
