@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react"
+import { useState } from "react"
 import styled from "styled-components"
-import AddProjectModal from "../components/write/project/addModal"
-import generatePages from "../utils/write/generatePages"
-import EditProjectModal from "../components/write/project/editModal"
+import Inform from "../components/write/profile/inform"
+import ProfileImage from "../components/write/profile/image"
 import SideBar from "../components/common/sidebar"
+import Introduce from "../components/write/profile/introduce"
+import TagInput from "../components/write/tag/tagInput"
+import Project from "../components/write/project/project"
+import AddProject from "../components/write/project/add"
+import AddProjectModal from "../components/write/project/addModal"
 
 interface project {
     title: string
@@ -13,14 +17,17 @@ interface project {
 }
 
 function Write() {
+    const [name, setName] = useState<string>("")
+    const [birth, setBirth] = useState<string>("")
+    const [phone, setPhone] = useState<string>("")
+    const [email, setEmail] = useState<string>("")
+    const [edu, setEdu] = useState<string>("")
+    const [image, setImage] = useState<string | null>(null)
+    const [short, setShort] = useState<string>("")
+    const [intro, setIntro] = useState<string>("")
+    const [skills, setSkills] = useState<string[]>([])
     const [license, setLicense] = useState<string[]>([])
-    const [skill, setSkill] = useState<string[]>([])
-    const [show, setShow] = useState<boolean>(false)
-    const [pages, setPages] = useState<React.ReactNode[][]>([])
-    const [edit, setEdit] = useState<{
-        show: boolean
-        data: project | null
-    }>({ show: false, data: null })
+    const [add, setAdd] = useState<boolean>(false)
 
     const [dummy, setDummy] = useState<project[]>([
         {
@@ -55,65 +62,59 @@ function Write() {
         },
     ])
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            generatePages({
-                skill,
-                setSkill,
-                license,
-                setLicense,
-                setShow,
-                setPages,
-                datas: dummy,
-                setEdit,
-            })
-        }, 200)
-
-        return () => clearTimeout(timer)
-    }, [skill, license, dummy]) // ✅ dummy 추가
-
-    const handleUpdate = (updatedData: project) => {
-        setDummy((prevDummy) =>
-            prevDummy.map((item) =>
-                item.title === edit.data?.title ? updatedData : item
-            )
-        )
-    }
-
     return (
         <>
             <SideBar />
-            {edit.show && edit.data && (
-                <EditProjectModal
-                    setFunc={setEdit}
-                    show={edit.show}
-                    title={edit.data.title}
-                    explain={edit.data.explain}
-                    skill={edit.data.skill}
-                    i_do={edit.data.i_do}
-                    onClick={() => {
-                        const updatedData = {
-                            title: edit.data?.title || "",
-                            explain: edit.data?.explain || "",
-                            skill: edit.data?.skill || [],
-                            i_do: edit.data?.i_do || "",
-                        }
-                        handleUpdate(updatedData) // ✅ 데이터 업데이트 추가
-                    }}
-                />
-            )}
-
-            {show && (
-                <AddProjectModal
-                    setFunc={() => setShow((prev) => !prev)}
-                    show={show}
-                />
-            )}
+            {add && <AddProjectModal show={add} setFunc={setAdd} />}
 
             <Background>
-                {pages.map((page, idx) => (
-                    <Container key={idx}>{page}</Container>
-                ))}
+                <Container>
+                    <ProfileContainer>
+                        <ProfileImage image={image} setImage={setImage} />
+                        <Inform
+                            name={name}
+                            setName={setName}
+                            birth={birth}
+                            setBirth={setBirth}
+                            phone={phone}
+                            setPhone={setPhone}
+                            email={email}
+                            setEmail={setEmail}
+                            edu={edu}
+                            setEdu={setEdu}
+                        />
+                    </ProfileContainer>
+
+                    <Introduce
+                        short={short}
+                        setShort={setShort}
+                        intro={intro}
+                        setIntro={setIntro}
+                    />
+
+                    <TagInput
+                        label="사용기술"
+                        tags={skills}
+                        setTags={setSkills}
+                    />
+                    <TagInput
+                        label="자격증"
+                        tags={license}
+                        setTags={setLicense}
+                    />
+
+                    <AddProject onClick={() => setAdd(true)} />
+                    {dummy &&
+                        dummy.map((v, i) => (
+                            <Project
+                                key={i}
+                                title={v.title}
+                                explain={v.explain}
+                                i_do={v.i_do}
+                                skill={v.skill}
+                            />
+                        ))}
+                </Container>
             </Background>
         </>
     )
@@ -121,7 +122,6 @@ function Write() {
 
 export default Write
 
-// 스타일 컴포넌트
 const Background = styled.div`
     width: 100%;
     display: flex;
@@ -130,11 +130,12 @@ const Background = styled.div`
     gap: 20px;
     padding-bottom: 40px;
     padding-top: 40px;
+    background-color: white;
 `
 
 const Container = styled.div`
     width: 840px;
-    height: 1188px;
+    min-height: 100vh;
     background: white;
     box-shadow: 0px 0px 20px #00000020;
     box-sizing: border-box;
@@ -144,4 +145,8 @@ const Container = styled.div`
     gap: 30px;
     page-break-after: always;
     border-radius: 20px;
+`
+
+const ProfileContainer = styled.div`
+    display: flex;
 `

@@ -1,14 +1,23 @@
 import styled from "styled-components"
 import Input from "../../common/input"
-import { useState } from "react"
+import { SetStateAction } from "react"
 
-function Introduce() {
-    const [intro, setIntro] = useState<string>("")
+interface props {
+    short: string
+    setShort: React.Dispatch<SetStateAction<string>>
+    intro: string
+    setIntro: React.Dispatch<SetStateAction<string>>
+}
 
+function Introduce({ short, setShort, intro, setIntro }: props) {
     return (
         <>
             <Container>
-                <Input label="한줄 자기 소개" />
+                <Input
+                    label="한줄 자기 소개"
+                    value={short}
+                    onChange={(e) => setShort(e.target.value)}
+                />
                 <Input
                     input="markdown"
                     label="소개"

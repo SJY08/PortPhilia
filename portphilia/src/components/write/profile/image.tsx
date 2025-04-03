@@ -1,15 +1,18 @@
-import { useState } from "react"
+import { SetStateAction } from "react"
 import styled from "styled-components"
 import { color } from "../../../styles/colors"
 
-function ProfileImage() {
-    const [imagePreview, setImagePreview] = useState<string | null>(null)
+interface props {
+    image: string | null
+    setImage: React.Dispatch<SetStateAction<string | null>>
+}
 
+function ProfileImage({ image, setImage }: props) {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
             const reader = new FileReader()
-            reader.onload = (e) => setImagePreview(e.target?.result as string)
+            reader.onload = (e) => setImage(e.target?.result as string)
             reader.readAsDataURL(file)
         }
     }
@@ -18,10 +21,10 @@ function ProfileImage() {
         <>
             <InputWrapper>
                 <InputLabel htmlFor="imageUpload">
-                    {imagePreview ? (
+                    {image ? (
                         <ImagePreviewWrapper>
                             <ImagePreview
-                                src={imagePreview}
+                                src={image}
                                 alt="프로필 이미지 미리보기"
                             />
                         </ImagePreviewWrapper>

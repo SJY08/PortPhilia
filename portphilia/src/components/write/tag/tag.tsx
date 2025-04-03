@@ -24,25 +24,29 @@ function Tag({ tag, index, handleTagDelete }: props) {
 export default Tag
 
 const TaggedContent = styled.div`
-    min-height: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px 8px;
+    padding: 2px 6px;
     border-radius: 8px;
     background-color: ${color.gray[100]};
     color: ${color.gray[500]};
-    font-weight: light;
-    font-size: 20px;
-    user-select: none;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 16px;
+    white-space: nowrap;
 `
 
-const DeleteButton = styled.button`
-    width: 20px;
-    height: 20px;
+const DeleteButton = styled.div`
+    width: 14px;
+    height: 14px;
     margin-left: 5px;
     cursor: pointer;
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `

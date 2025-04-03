@@ -31,6 +31,7 @@ function TagInput({ tags, setTags, label }: Props) {
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value.length > 25) return
         setText(e.target.value)
     }
 
@@ -49,7 +50,7 @@ function TagInput({ tags, setTags, label }: Props) {
                     <Input
                         type="text"
                         value={text}
-                        placeholder="태그 입력 (최대 10개)"
+                        placeholder="태그 입력 (최대 10개, 25자 최대)"
                         onChange={handleInputChange}
                         onKeyDown={handleInputKeyDown}
                     />
