@@ -1,8 +1,17 @@
 import PortfolioService from "../apis/portfolio"
+import ProjectsService from "../apis/project"
 
-async function getInfo() {
+export async function getPortfolio() {
     const data = await PortfolioService.getPortfolio()
     return data
 }
 
-export default getInfo
+export async function getProject() {
+    const data = await ProjectsService.getProjects()
+    return data
+}
+
+export async function getProjectById(id: number) {
+    const data = await ProjectsService.getProjectById(id)
+    return data
+}
