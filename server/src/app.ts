@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes"
 import userRoutes from "./routes/userRoutes"
 import projectRoutes from "./routes/projectRoutes"
 import cors from "cors"
+import bodyParser = require("body-parser")
 
 dotenv.config()
 
@@ -14,6 +15,9 @@ const corsOptions = {
     credentials: true,
 }
 app.use(cors(corsOptions))
+
+app.use(bodyParser.json({ limit: "50mb" }))
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
 
 // 라우팅 설정
 app.use("/auth", authRoutes)
