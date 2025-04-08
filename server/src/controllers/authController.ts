@@ -65,13 +65,17 @@ export async function login(req: Request, res: Response) {
         if (!user)
             return res
                 .status(400)
-                .json({ error: "유효하지 않은 아이디 혹은 비밀번호입니다." })
+                .json({
+                    error: "유효하지 않은 아이디 혹은 비밀번호입니다. notuser",
+                })
 
         const validPassword = await bcrypt.compare(password, user.password)
         if (!validPassword)
             return res
                 .status(400)
-                .json({ error: "유효하지 않은 아이디 혹은 비밀번호입니다." })
+                .json({
+                    error: "유효하지 않은 아이디 혹은 비밀번호입니다. notvalidpassword",
+                })
 
         const tokens = generateTokens(user.id)
         res.json({ user, ...tokens })
