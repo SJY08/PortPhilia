@@ -20,13 +20,29 @@ export async function getProjectById(req: AuthRequest, res: Response) {
             where: { id: projectId },
         })
         if (!project || project.user_id !== req.user!.userId) {
-            return res
-                .status(404)
-                .json({
-                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
-                })
+            return res.status(404).json({
+                error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+            })
         }
         res.json(project)
+    } catch (error) {
+        res.status(500).json({ error: "서버 에러" })
+    }
+}
+
+export async function addProject(req: AuthRequest, res: Response) {
+    try {
+        const { project_name, tech_used, project_intro, my_role } = req.body
+        const newProject = await prisma.project.create({
+            data: {
+                user_id: req.user!.userId,
+                project_name,
+                tech_used,
+                project_intro,
+                my_role,
+            },
+        })
+        res.status(201).json(newProject)
     } catch (error) {
         res.status(500).json({ error: "서버 에러" })
     }
@@ -40,11 +56,9 @@ export async function updateProject(req: AuthRequest, res: Response) {
             where: { id: projectId },
         })
         if (!project || project.user_id !== req.user!.userId) {
-            return res
-                .status(404)
-                .json({
-                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
-                })
+            return res.status(404).json({
+                error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+            })
         }
         const updatedProject = await prisma.project.update({
             where: { id: projectId },
@@ -63,11 +77,9 @@ export async function deleteProject(req: AuthRequest, res: Response) {
             where: { id: projectId },
         })
         if (!project || project.user_id !== req.user!.userId) {
-            return res
-                .status(404)
-                .json({
-                    error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
-                })
+            return res.status(404).json({
+                error: "프로젝트를 찾을 수 없거나 접근 권한이 없습니다.",
+            })
         }
         await prisma.project.delete({
             where: { id: projectId },
