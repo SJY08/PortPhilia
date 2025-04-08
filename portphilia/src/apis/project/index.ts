@@ -1,41 +1,40 @@
 import { AxiosError } from "axios"
 import { instance } from ".."
-import { Project } from "./type"
+import { ProjectType } from "./type"
 
 export default class ProjectsService {
-    // 전체 프로젝트 목록 가져오기
-    static async getProjects(): Promise<Project[]> {
+    static async getProjects(): Promise<ProjectType[]> {
         try {
-            const response = await instance.get<{ projects: Project[] }>(
-                "/projects"
-            )
-            return response.data.projects
+            const response = await instance.get<ProjectType[]>("/projects")
+            return response.data
         } catch (error) {
-            console.error("프로젝트 목록 가져오기 실패", error)
+            console.error("❌ 프로젝트 목록 가져오기 실패", error)
             throw new Error("프로젝트 목록 가져오기 실패")
         }
     }
 
-    // 특정 프로젝트 가져오기 (ID 기준)
-    static async getProjectById(projectId: string | number): Promise<Project> {
+    static async getProjectById(
+        projectId: string | number
+    ): Promise<ProjectType> {
         try {
-            const response = await instance.get<{ project: Project }>(
+            const response = await instance.get<ProjectType>(
                 `/projects/${projectId}`
             )
-            return response.data.project
+            return response.data
         } catch (error) {
-            console.error("프로젝트 가져오기 실패", error)
+            console.error("❌ 프로젝트 가져오기 실패", error)
             throw new Error("프로젝트 가져오기 실패")
         }
     }
 
-    // 새 프로젝트 추가
-    static async addProject(project: Project): Promise<number> {
+    static async addProject(project: ProjectType): Promise<number> {
         try {
-            // 서버에서는 tech_stack을 JSON 문자열로 받으므로, 변환하여 전송할 수 있습니다.
             const payload = {
-                ...project,
-                tech_stack: JSON.stringify(project.tech_stack),
+                project_name: project.title,
+                tech_used: project.tech_stack,
+                project_intro: project.description,
+                my_role: project.i_do,
+                link: project.link,
             }
             const response = await instance.post("/projects", payload)
             return response.status
@@ -46,15 +45,17 @@ export default class ProjectsService {
         }
     }
 
-    // 프로젝트 업데이트
     static async updateProject(
         projectId: string | number,
-        project: Project
+        project: ProjectType
     ): Promise<number> {
         try {
             const payload = {
-                ...project,
-                tech_stack: JSON.stringify(project.tech_stack),
+                project_name: project.title,
+                tech_used: project.tech_stack,
+                project_intro: project.description,
+                my_role: project.i_do,
+                link: project.link,
             }
             const response = await instance.put(
                 `/projects/${projectId}`,
@@ -68,7 +69,6 @@ export default class ProjectsService {
         }
     }
 
-    // 프로젝트 삭제
     static async deleteProject(projectId: string | number): Promise<number> {
         try {
             const response = await instance.delete(`/projects/${projectId}`)
