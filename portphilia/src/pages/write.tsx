@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import styled from "styled-components"
 import Inform from "../components/write/profile/inform"
 import ProfileImage from "../components/write/profile/image"
@@ -8,15 +8,14 @@ import TagInput from "../components/write/tag/tagInput"
 import Project from "../components/write/project/project"
 import AddProject from "../components/write/project/add"
 import AddProjectModal from "../components/write/project/addModal"
-
-interface project {
-    title: string
-    explain: string
-    skill: string[]
-    i_do: string
-}
+import PortfolioService from "../apis/portfolio"
+import { Portfolio } from "../apis/portfolio/type"
+import ProjectsService from "../apis/project"
+import { ProjectType } from "../apis/project/type"
+import { tempCookie } from "../utils/tempCookie"
 
 function Write() {
+    // 포트폴리오 관련 상태
     const [name, setName] = useState<string>("")
     const [birth, setBirth] = useState<string>("")
     const [phone, setPhone] = useState<string>("")
@@ -29,38 +28,97 @@ function Write() {
     const [license, setLicense] = useState<string[]>([])
     const [add, setAdd] = useState<boolean>(false)
 
-    const [dummy, setDummy] = useState<project[]>([
-        {
-            title: "portphilia",
-            explain: "it's a service to help writing portfolio for developers",
-            skill: ["node.js", "react", "typescript", "figma"],
-            i_do: "design, publishing, api linking",
+    // 프로젝트 관련 상태
+    const [projects, setProjects] = useState<ProjectType[]>([])
+
+    // 컴포넌트 마운트 시 포트폴리오 데이터를 API로부터 가져와 상태 업데이트
+    useEffect(() => {
+        async function fetchPortfolio() {
+            try {
+                // Access Token 존재 여부 확인 (로그인 상태일 경우)
+                const token = tempCookie.getAccessToken()
+                console.log("현재 Access Token:", token)
+
+                // PortfolioService를 통해 포트폴리오 정보 가져오기
+                const portfolio: Portfolio =
+                    await PortfolioService.getPortfolio()
+
+                // 가져온 데이터를 각 상태에 매핑
+                setName(portfolio.username) // 필요에 따라 포트폴리오의 필드명을 변경하세요.
+                setEdu(portfolio.education || "")
+                setShort(portfolio.short_intro || "")
+                setIntro(portfolio.bio || "")
+                setSkills(portfolio.tech_stack || [])
+                setLicense(portfolio.certifications || [])
+                if (portfolio.profile_image_url) {
+                    setImage(portfolio.profile_image_url)
+                }
+            } catch (error) {
+                console.error("포트폴리오 가져오기 실패", error)
+            }
+        }
+        fetchPortfolio()
+    }, [])
+
+    // 컴포넌트 마운트 시 프로젝트 목록을 API로부터 가져와 상태 업데이트
+    useEffect(() => {
+        async function fetchProjects() {
+            try {
+                // ProjectsService를 통해 프로젝트 목록 가져오기
+                const projectsData = await ProjectsService.getProjects()
+                setProjects(projectsData)
+            } catch (error) {
+                console.error("프로젝트 가져오기 실패", error)
+            }
+        }
+        fetchProjects()
+    }, [])
+
+    // ctrl + s 이벤트 핸들러: 포트폴리오 업데이트
+    const handleKeyDown = useCallback(
+        async (event: KeyboardEvent) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+                event.preventDefault() // 기본 저장 동작 방지
+                const portfolioData: Portfolio = {
+                    id: 0, // 서버에서 id 처리는 다르게 이루어질 수 있으므로 필요에 따라 수정하세요.
+                    username: name,
+                    password: "", // 비밀번호 업데이트는 별도 고려
+                    name: name,
+                    birth_date: birth ? new Date(birth) : undefined,
+                    phone_number: phone,
+                    email: email,
+                    education: edu,
+                    short_intro: short,
+                    bio: intro,
+                    tech_stack: skills,
+                    certifications: license,
+                    profile_image_url: image || undefined,
+                }
+                try {
+                    const status = await PortfolioService.updatePortfolio(
+                        portfolioData
+                    )
+                    if (status === 200 || status === 201) {
+                        alert("저장되었습니다.")
+                    } else {
+                        alert("저장에 실패하였습니다.")
+                    }
+                } catch (error) {
+                    console.error("저장 에러", error)
+                    alert("저장 중 오류가 발생하였습니다.")
+                }
+            }
         },
-        {
-            title: "diaream",
-            explain: "it's a sleeping diary",
-            skill: ["node.js", "next.js", "typescript", "figma", "axios"],
-            i_do: "design, publishing, api linking, server",
-        },
-        {
-            title: "project3",
-            explain: "another project",
-            skill: ["react", "express"],
-            i_do: "backend",
-        },
-        {
-            title: "project4",
-            explain: "awesome work",
-            skill: ["angular", "firebase"],
-            i_do: "frontend",
-        },
-        {
-            title: "project5",
-            explain: "new startup",
-            skill: ["vue", "node.js"],
-            i_do: "fullstack",
-        },
-    ])
+        [name, birth, phone, email, edu, short, intro, skills, license, image]
+    )
+
+    // 전역 키 이벤트 리스너 등록
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [handleKeyDown])
 
     return (
         <>
@@ -104,14 +162,15 @@ function Write() {
                     />
 
                     <AddProject onClick={() => setAdd(true)} />
-                    {dummy &&
-                        dummy.map((v, i) => (
+                    {/* 서버에서 불러온 프로젝트 목록 렌더링 */}
+                    {projects.length > 0 &&
+                        projects.map((project, index) => (
                             <Project
-                                key={i}
-                                title={v.title}
-                                explain={v.explain}
-                                i_do={v.i_do}
-                                skill={v.skill}
+                                key={project.id || index}
+                                title={project.title}
+                                explain={project.description}
+                                i_do={project.i_do}
+                                skill={project.tech_stack}
                             />
                         ))}
                 </Container>

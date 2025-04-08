@@ -4,7 +4,7 @@ import { authenticateToken } from "../middleware/authenticate"
 
 const router = Router()
 
-router.get("/user", authenticateToken, getUser)
-router.put("/user", authenticateToken, updateUser)
+router.get("/", authenticateToken, getUser)
+router.put("/", authenticateToken, updateUser)
 
 export default router

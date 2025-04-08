@@ -10,10 +10,10 @@ import { authenticateToken } from "../middleware/authenticate"
 
 const router = Router()
 
-router.get("/projects", authenticateToken, getProjects)
-router.post("/projects", authenticateToken, addProject)
-router.get("/projects/:id", authenticateToken, getProjectById)
-router.put("/projects/:id", authenticateToken, updateProject)
-router.delete("/projects/:id", authenticateToken, deleteProject)
+router.get("/", authenticateToken, getProjects)
+router.post("/", authenticateToken, addProject)
+router.get("/:id", authenticateToken, getProjectById)
+router.put("/:id", authenticateToken, updateProject)
+router.delete("/:id", authenticateToken, deleteProject)
 
 export default router

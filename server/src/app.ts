@@ -3,11 +3,17 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/authRoutes"
 import userRoutes from "./routes/userRoutes"
 import projectRoutes from "./routes/projectRoutes"
+import cors from "cors"
 
 dotenv.config()
 
 const app = express()
 app.use(express.json())
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+}
+app.use(cors(corsOptions))
 
 // 라우팅 설정
 app.use("/auth", authRoutes)

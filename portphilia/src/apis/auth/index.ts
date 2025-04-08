@@ -10,7 +10,6 @@ export default class AuthService {
                 "/auth/login",
                 data
             )
-            // 서버에서 accessToken 반환 시 저장
             if (response.data.accessToken) {
                 tempCookie.setAccessToken(response.data.accessToken)
             } else {
@@ -27,7 +26,7 @@ export default class AuthService {
     static async register(data: RegisterData): Promise<number> {
         try {
             const response = await instance.post<AuthResponse>(
-                "/auth/register",
+                "/auth/signup",
                 data
             )
             if (response.data.accessToken) {
