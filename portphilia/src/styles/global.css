@@ -3,33 +3,21 @@
    License: none (public domain)
 */
 
+/* Pretendard 폰트 선언 */
 @font-face {
-    font-family: "Pretendard-Regular";
+    font-family: "Pretendard";
     src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
         format("woff");
     font-weight: 400;
     font-style: normal;
 }
 
+/* 기본 폰트 설정 */
 * {
-    font-family: "Pretendard-Regular", sans-serif;
+    font-family: "Pretendard", sans-serif;
 }
 
-:root {
-    font-family: Pretendard;
-}
-
-@keyframes up {
-    0% {
-        opacity: 0;
-        transform: translateY(120px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* CSS 리셋 */
 html,
 body {
     margin: 0;
@@ -49,15 +37,12 @@ ul {
     margin: 1em 0;
     padding-left: 1.5em;
 }
-
 ul {
     list-style-type: disc;
 }
-
 ol {
     list-style-type: decimal;
 }
-
 ul ul,
 ol ol,
 ul ol,
@@ -65,7 +50,6 @@ ol ul {
     margin-top: 0;
     margin-bottom: 0;
 }
-
 li {
     margin-bottom: 0.5em;
 }
@@ -81,44 +65,34 @@ h6 {
     margin-top: 1em;
     margin-bottom: 0.5em;
 }
-
 h1 {
     font-size: 2em;
 }
-
 h2 {
     font-size: 1.75em;
 }
-
 h3 {
     font-size: 1.5em;
 }
-
 h4 {
     font-size: 1.25em;
 }
-
 h5 {
     font-size: 1.1em;
 }
-
 h6 {
     font-size: 1em;
 }
-
 p {
     margin-bottom: 1em;
 }
-
 a {
     color: #007bff;
     text-decoration: none;
 }
-
 a:hover {
     text-decoration: underline;
 }
-
 blockquote {
     margin: 1em 0;
     padding: 0.5em 1em;
@@ -126,7 +100,6 @@ blockquote {
     color: #555;
     background: #f9f9f9;
 }
-
 pre,
 code {
     font-family: monospace;
@@ -134,25 +107,36 @@ code {
     padding: 0.2em 0.4em;
     border-radius: 3px;
 }
-
 pre {
     padding: 1em;
     overflow-x: auto;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1em;
 }
-
 td,
 th {
     border: 1px solid #ddd;
     padding: 0.5em;
 }
-
 th {
     background: #f2f2f2;
     font-weight: bold;
+}
+
+/* w-md-editor 및 관련 요소 설정 */
+/* textarea 내에 해당 요소들이 존재할 경우 */
+textarea .w-md-editor-content .w-md-editor-text-input {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    font-family: inherit !important;
+    padding: 12px !important;
+    color: black;
+}
+
+textarea .w-md-editor {
+    font-size: 16px !important;
+    font-family: "Pretendard", sans-serif !important;
 }

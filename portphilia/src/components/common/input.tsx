@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { color } from "../../styles/colors"
 import { useState } from "react"
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"
-import MDEditor from "@uiw/react-md-editor"
+import ReactMarkdown from "react-markdown"
 
 interface props {
     label?: string
@@ -29,7 +29,7 @@ function Input({
 
     return (
         <>
-            {input == "input" && (
+            {input === "input" && (
                 <Container>
                     {label && <Label>{label}</Label>}
                     <Wrapper>
@@ -38,7 +38,7 @@ function Input({
                             onChange={onChange}
                             onKeyDown={onKeyDown}
                             type={
-                                type == "password"
+                                type === "password"
                                     ? show
                                         ? "text"
                                         : "password"
@@ -46,23 +46,17 @@ function Input({
                             }
                             placeholder={placeholder}
                         />
-
-                        {type == "password" && (
+                        {type === "password" && (
                             <Icon onClick={() => setShow(!show)}>
-                                {type == "password" &&
-                                    (show ? (
-                                        <AiFillEye />
-                                    ) : (
-                                        <AiFillEyeInvisible />
-                                    ))}
+                                {show ? <AiFillEye /> : <AiFillEyeInvisible />}
                             </Icon>
                         )}
                     </Wrapper>
                 </Container>
             )}
-            {input == "textarea" && (
+            {input === "textarea" && (
                 <Container>
-                    <Label>{label}</Label>
+                    {label && <Label>{label}</Label>}
                     <TextAreaWrapper>
                         <TextArea
                             value={value}
@@ -74,20 +68,24 @@ function Input({
             )}
             {input === "markdown" && (
                 <Container>
-                    <Label>{label}</Label>
-                    <StyledMDEditor>
-                        <MDEditor
-                            className={StyledMDEditor}
-                            value={value}
-                            onChange={(val) => {
-                                if (onTextAreaChange) {
-                                    onTextAreaChange({
-                                        target: { value: val || "" },
-                                    } as React.ChangeEvent<HTMLTextAreaElement>)
-                                }
-                            }}
-                        />
-                    </StyledMDEditor>
+                    {label && <Label>{label}</Label>}
+                    <MarkdownContainer>
+                        <TextAreaContainer>
+                            <Text>작성</Text>
+                            <StyledTextArea
+                                value={value}
+                                onChange={onTextAreaChange}
+                                placeholder={placeholder}
+                            />
+                        </TextAreaContainer>
+
+                        <TextAreaContainer>
+                            <Text>미리보기</Text>
+                            <PreviewWrapper>
+                                <ReactMarkdown>{value || ""}</ReactMarkdown>
+                            </PreviewWrapper>
+                        </TextAreaContainer>
+                    </MarkdownContainer>
                 </Container>
             )}
         </>
@@ -99,8 +97,6 @@ export default Input
 const Container = styled.div`
     width: 100%;
     display: flex;
-    justify-content: start;
-    align-items: start;
     flex-direction: column;
     gap: 4px;
 `
@@ -108,21 +104,12 @@ const Container = styled.div`
 const Label = styled.label`
     color: black;
     font-size: 16px;
+    font-family: "Pretendard", sans-serif;
 `
 
 const Wrapper = styled.div`
     width: 100%;
     height: 35px;
-    border: 1px solid ${color.gray[400]};
-    border-radius: 6px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-`
-
-const TextAreaWrapper = styled.div`
-    width: 100%;
-    height: 150px;
     border: 1px solid ${color.gray[400]};
     border-radius: 6px;
     box-sizing: border-box;
@@ -137,6 +124,7 @@ const StyledInput = styled.input`
     background: none;
     color: black;
     font-size: 16px;
+    font-family: "Pretendard", sans-serif;
     outline: none;
 `
 
@@ -152,6 +140,16 @@ const Icon = styled.div`
     color: ${color.gray[400]};
 `
 
+const TextAreaWrapper = styled.div`
+    width: 100%;
+    height: 150px;
+    border: 1px solid ${color.gray[400]};
+    border-radius: 6px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+`
+
 const TextArea = styled.textarea`
     border: none;
     width: 100%;
@@ -159,35 +157,58 @@ const TextArea = styled.textarea`
     background: none;
     color: black;
     font-size: 16px;
+    font-family: "Pretendard", sans-serif;
     outline: none;
     resize: none;
-    margin-top: 15px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin: 15px 8px 0 8px;
 `
 
-const StyledMDEditor = styled.div`
+const MarkdownContainer = styled.div`
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    border-radius: 6px;
+    padding: 12px;
+    box-sizing: border-box;
+    font-family: "Pretendard", sans-serif;
+`
+
+const StyledTextArea = styled.textarea`
     width: 100%;
     height: 300px;
+    border: 1px solid ${color.gray[400]};
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: "Pretendard", sans-serif;
+    outline: none;
+    resize: none;
+`
 
-    .w-md-editor {
-        height: 100% !important;
-    }
+const TextAreaContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+`
 
-    .w-md-editor-text {
-        resize: none !important;
-        overflow: hidden !important;
-    }
+const Text = styled.p`
+    font-size: 16px;
+    font-weight: light;
+    margin: 0;
+`
 
-    .w-md-editor-textarea {
-        resize: none !important;
-        overflow: hidden !important;
-        display: block;
-    }
-
-    textarea {
-        resize: none !important;
-        overflow: hidden !important;
-        display: block;
-    }
+const PreviewWrapper = styled.div`
+    width: 100%;
+    height: 300px;
+    border: 1px solid ${color.gray[400]};
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: "Pretendard", sans-serif;
+    background: #f9f9f9;
+    overflow-y: auto;
+    white-space: pre-wrap;
 `
