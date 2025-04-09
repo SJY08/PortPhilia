@@ -12,7 +12,7 @@ model User {
     username          String    @unique @db.VarChar(50)
     password          String    @db.VarChar(255)
     name              String    @db.VarChar(100)
-    birth_date        DateTime?
+    birth_date        String?   @db.VarChar(20)
     phone_number      String?   @db.VarChar(20)
     email             String?   @db.VarChar(100)
     education         String?

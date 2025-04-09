@@ -23,14 +23,19 @@ export async function getUser(req: AuthRequest, res: Response) {
         })
         if (!user)
             return res.status(404).json({ error: "유저를 찾을 수 없습니다." })
+
         res.json(user)
     } catch (error) {
+        console.error("getUser error:", error)
         res.status(500).json({ error: "서버 에러" })
     }
 }
 
 export async function updateUser(req: AuthRequest, res: Response) {
-    const updateData = req.body
+    const { id, password, ...updateData } = req.body
+
+    console.log("📥 업데이트 요청 데이터:", updateData) // ✅ 추가
+
     try {
         const updatedUser = await prisma.user.update({
             where: { id: req.user!.userId },
@@ -38,6 +43,7 @@ export async function updateUser(req: AuthRequest, res: Response) {
         })
         res.json(updatedUser)
     } catch (error) {
+        console.error("❌ Update User Error:", error)
         res.status(500).json({ error: "서버 에러" })
     }
 }

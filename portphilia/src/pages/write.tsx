@@ -1,3 +1,4 @@
+// Write.tsx
 import { useState, useEffect, useCallback } from "react"
 import styled from "styled-components"
 import Inform from "../components/write/profile/inform"
@@ -9,7 +10,7 @@ import Project from "../components/write/project/project"
 import AddProject from "../components/write/project/add"
 import AddProjectModal from "../components/write/project/addModal"
 import PortfolioService from "../apis/portfolio"
-import { Portfolio } from "../apis/portfolio/type"
+import { Portfolio, UpdatePortfolio } from "../apis/portfolio/type"
 import ProjectsService from "../apis/project"
 import { ProjectType } from "../apis/project/type"
 import { tempCookie } from "../utils/tempCookie"
@@ -31,20 +32,19 @@ function Write() {
     // 프로젝트 관련 상태
     const [projects, setProjects] = useState<ProjectType[]>([])
 
-    // 컴포넌트 마운트 시 포트폴리오 데이터를 API로부터 가져와 상태 업데이트
     useEffect(() => {
         async function fetchPortfolio() {
             try {
-                // Access Token 존재 여부 확인 (로그인 상태일 경우)
                 const token = tempCookie.getAccessToken()
                 console.log("현재 Access Token:", token)
-
-                // PortfolioService를 통해 포트폴리오 정보 가져오기
                 const portfolio: Portfolio =
                     await PortfolioService.getPortfolio()
-
-                // 가져온 데이터를 각 상태에 매핑
-                setName(portfolio.username) // 필요에 따라 포트폴리오의 필드명을 변경하세요.
+                // 기존에 portfolio.username을 사용하고 있었다면,
+                // 실제 사용자 이름이 저장되는 필드는 portfolio.name입니다.
+                setName(portfolio.name) // 올바른 필드 사용
+                setBirth(portfolio.birth_date || "")
+                setPhone(portfolio.phone_number || "")
+                setEmail(portfolio.email || "")
                 setEdu(portfolio.education || "")
                 setShort(portfolio.short_intro || "")
                 setIntro(portfolio.bio || "")
@@ -53,6 +53,7 @@ function Write() {
                 if (portfolio.profile_image_url) {
                     setImage(portfolio.profile_image_url)
                 }
+                console.log(portfolio)
             } catch (error) {
                 console.error("포트폴리오 가져오기 실패", error)
             }
@@ -60,11 +61,9 @@ function Write() {
         fetchPortfolio()
     }, [])
 
-    // 컴포넌트 마운트 시 프로젝트 목록을 API로부터 가져와 상태 업데이트
     useEffect(() => {
         async function fetchProjects() {
             try {
-                // ProjectsService를 통해 프로젝트 목록 가져오기
                 const projectsData = await ProjectsService.getProjects()
                 setProjects(projectsData)
             } catch (error) {
@@ -74,17 +73,17 @@ function Write() {
         fetchProjects()
     }, [])
 
-    // ctrl + s 이벤트 핸들러: 포트폴리오 업데이트
     const handleKeyDown = useCallback(
         async (event: KeyboardEvent) => {
             if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-                event.preventDefault() // 기본 저장 동작 방지
-                const portfolioData: Portfolio = {
-                    id: 0, // 서버에서 id 처리는 다르게 이루어질 수 있으므로 필요에 따라 수정하세요.
+                event.preventDefault()
+                // id와 password를 제외한 업데이트 데이터 구성
+                const portfolioData: UpdatePortfolio = {
+                    // username 필드는 업데이트 대상이 아니라면 생략해도 됩니다.
+                    // 만약 username도 업데이트 대상이면 포함하세요.
                     username: name,
-                    password: "", // 비밀번호 업데이트는 별도 고려
                     name: name,
-                    birth_date: birth ? new Date(birth) : undefined,
+                    birth_date: birth,
                     phone_number: phone,
                     email: email,
                     education: edu,
@@ -124,7 +123,6 @@ function Write() {
         <>
             <SideBar />
             {add && <AddProjectModal show={add} setFunc={setAdd} />}
-
             <Background>
                 <Container>
                     <ProfileContainer>
@@ -142,14 +140,12 @@ function Write() {
                             setEdu={setEdu}
                         />
                     </ProfileContainer>
-
                     <Introduce
                         short={short}
                         setShort={setShort}
                         intro={intro}
                         setIntro={setIntro}
                     />
-
                     <TagInput
                         label="사용기술"
                         tags={skills}
@@ -160,7 +156,6 @@ function Write() {
                         tags={license}
                         setTags={setLicense}
                     />
-
                     <AddProject onClick={() => setAdd(true)} />
                     {/* 서버에서 불러온 프로젝트 목록 렌더링 */}
                     {projects.length > 0 &&

@@ -3,7 +3,7 @@ export interface Portfolio {
     username: string
     password: string
     name: string
-    birth_date?: Date
+    birth_date?: string
     phone_number?: string
     email?: string
     education?: string
@@ -13,3 +13,5 @@ export interface Portfolio {
     certifications?: string[]
     profile_image_url?: string
 }
+
+export type UpdatePortfolio = Omit<Portfolio, "id" | "password">

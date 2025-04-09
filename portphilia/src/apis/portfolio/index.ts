@@ -1,6 +1,6 @@
 import { AxiosError } from "axios"
 import { instance } from ".."
-import { Portfolio } from "../portfolio/type"
+import { UpdatePortfolio, Portfolio } from "../portfolio/type"
 
 export default class PortfolioService {
     static async getPortfolio(): Promise<Portfolio> {
@@ -13,7 +13,7 @@ export default class PortfolioService {
         }
     }
 
-    static async updatePortfolio(data: Portfolio): Promise<number> {
+    static async updatePortfolio(data: UpdatePortfolio): Promise<number> {
         try {
             const response = await instance.put("/user", data)
             return response.status
