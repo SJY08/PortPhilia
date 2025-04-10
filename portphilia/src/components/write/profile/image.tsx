@@ -1,45 +1,41 @@
-import { SetStateAction } from "react"
+import React from "react"
 import styled from "styled-components"
 import { color } from "../../../styles/colors"
 
-interface props {
-    image: string | null
-    setImage: React.Dispatch<SetStateAction<string | null>>
+interface ProfileImageProps {
+    preview: string | null
+    onFileChange: (file: File) => void
 }
 
-function ProfileImage({ image, setImage }: props) {
+function ProfileImage({ preview, onFileChange }: ProfileImageProps) {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e) => setImage(e.target?.result as string)
-            reader.readAsDataURL(file)
-        }
+        if (!file) return
+
+        onFileChange(file)
     }
 
     return (
-        <>
-            <InputWrapper>
-                <InputLabel htmlFor="imageUpload">
-                    {image ? (
-                        <ImagePreviewWrapper>
-                            <ImagePreview
-                                src={image}
-                                alt="프로필 이미지 미리보기"
-                            />
-                        </ImagePreviewWrapper>
-                    ) : (
-                        "이미지를 선택하세요"
-                    )}
-                </InputLabel>
-                <HiddenInput
-                    type="file"
-                    id="imageUpload"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                />
-            </InputWrapper>
-        </>
+        <InputWrapper>
+            <InputLabel htmlFor="imageUpload">
+                {preview ? (
+                    <ImagePreviewWrapper>
+                        <ImagePreview
+                            src={preview}
+                            alt="프로필 이미지 미리보기"
+                        />
+                    </ImagePreviewWrapper>
+                ) : (
+                    "이미지를 선택하세요"
+                )}
+            </InputLabel>
+            <HiddenInput
+                type="file"
+                id="imageUpload"
+                accept="image/*"
+                onChange={handleImageChange}
+            />
+        </InputWrapper>
     )
 }
 
@@ -74,7 +70,7 @@ const HiddenInput = styled.input`
 const ImagePreviewWrapper = styled.div`
     width: 100%;
     height: 100%;
-    background-color: #fff; /* 투명 이미지 대비 흰 배경 */
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,6 +79,6 @@ const ImagePreviewWrapper = styled.div`
 const ImagePreview = styled.img`
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* 긴 쪽 기준으로 크기 맞춤 (1:1 비율 유지) */
-    background-color: #fff; /* 투명 이미지 대비 흰 배경 */
+    object-fit: contain;
+    background-color: #fff;
 `

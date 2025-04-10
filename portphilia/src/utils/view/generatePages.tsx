@@ -19,10 +19,12 @@ export interface ProfileData {
     edu: string
 }
 
-export interface Project {
+export interface ProjectType {
+    id?: number
     title: string
-    explain: string
-    skill: string[]
+    description: string
+    link: string
+    tech_stack: string[]
     i_do: string
 }
 
@@ -30,7 +32,7 @@ interface Props {
     skill: string[]
     license: string[]
     setPages: React.Dispatch<React.SetStateAction<React.ReactNode[][]>>
-    datas: Project[]
+    datas: ProjectType[]
     text: string
     profileData: ProfileData
     intro: string

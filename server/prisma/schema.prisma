@@ -17,7 +17,7 @@ model User {
     email             String?   @db.VarChar(100)
     education         String?
     short_intro       String?   @db.VarChar(255)
-    bio               String?
+    bio               String?   @db.Text
     tech_stack        Json?
     certifications    Json?
     profile_image_url String?   @db.VarChar(255)

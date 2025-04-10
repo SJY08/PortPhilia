@@ -34,7 +34,29 @@ export async function getUser(req: AuthRequest, res: Response) {
 export async function updateUser(req: AuthRequest, res: Response) {
     const { id, password, ...updateData } = req.body
 
-    console.log("📥 업데이트 요청 데이터:", updateData) // ✅ 추가
+    if (updateData.tech_stack) {
+        try {
+            updateData.tech_stack = JSON.parse(updateData.tech_stack)
+        } catch (e) {
+            console.error("tech_stack 파싱 에러:", e)
+            updateData.tech_stack = []
+        }
+    }
+
+    if (updateData.certifications) {
+        try {
+            updateData.certifications = JSON.parse(updateData.certifications)
+        } catch (e) {
+            console.error("certifications 파싱 에러:", e)
+            updateData.certifications = []
+        }
+    }
+
+    if (req.file) {
+        updateData.profile_image_url = `/uploads/${req.file.filename}`
+    }
+
+    console.log("📥 업데이트 요청 데이터:", updateData)
 
     try {
         const updatedUser = await prisma.user.update({
