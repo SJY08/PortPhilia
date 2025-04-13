@@ -9,33 +9,35 @@ import ProjectService from "../../../apis/project"
 interface Props {
     show: boolean
     setFunc: React.Dispatch<React.SetStateAction<boolean>>
-    onSuccess?: () => void // 프로젝트 추가 성공 시 실행될 콜백
+    onSuccess?: () => void
 }
 
 function AddProjectModal({ show, setFunc, onSuccess }: Props) {
     const [skills, setSkills] = useState<string[]>([])
     const [title, setTitle] = useState<string>("")
     const [explain, setExplain] = useState<string>("")
-    const [link, setLink] = useState<string>("")
+    const [iDo, setIDo] = useState<string>("")
 
     const handleAddProject = async () => {
         try {
-            if (title && skills && explain && link) {
+            if (title && skills.length && explain && iDo) {
                 const projectData = {
                     title,
                     description: explain,
-                    link,
                     tech_stack: skills,
+                    i_do: iDo,
                 }
 
                 const status = await ProjectService.addProject(projectData)
-                if (status === 201 || status == 200) {
+                if (status === 201 || status === 200) {
                     alert("프로젝트가 성공적으로 추가되었습니다.")
                     setFunc(false)
                     onSuccess && onSuccess()
                 } else {
                     alert("프로젝트 추가에 실패했습니다.")
                 }
+            } else {
+                alert("모든 항목을 입력해 주세요.")
             }
         } catch (e) {
             console.error(e)
@@ -64,12 +66,13 @@ function AddProjectModal({ show, setFunc, onSuccess }: Props) {
                         label="프로젝트소개"
                         input="textarea"
                         value={explain}
-                        onChange={(e) => setExplain(e.target.value)}
+                        onTextAreaChange={(e) => setExplain(e.target.value)}
                     />
                     <Input
-                        label="프로젝트 링크"
-                        value={link}
-                        onChange={(e) => setLink(e.target.value)}
+                        label="내 역할"
+                        value={iDo}
+                        input="textarea"
+                        onTextAreaChange={(e) => setIDo(e.target.value)}
                     />
                     <TagInput
                         label="사용 기술"

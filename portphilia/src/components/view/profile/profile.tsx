@@ -13,7 +13,15 @@ interface ProfileProps {
 function Profile({ image, name, birth, phone, email, edu }: ProfileProps) {
     return (
         <Container>
-            <Image image={image} />
+            {image ? (
+                <Image image={image} src={image} alt="프로필 이미지" />
+            ) : (
+                <Image
+                    image={null}
+                    src="/default-profile.png"
+                    alt="기본 프로필 이미지"
+                />
+            )}
 
             <InfromContainer>
                 <Name>{name}</Name>
@@ -41,14 +49,15 @@ interface ImageProps {
     image: string | null
 }
 
-const Image = styled.div<ImageProps>`
-    width: 250px;
-    height: 250px;
+const Image = styled.img<ImageProps>`
+    max-width: 250px;
+    max-height: 250px;
+    width: auto;
+    height: auto;
     border-radius: 12px;
     background-color: ${color.gray[400]};
-    background-image: ${({ image }) => (image ? `url(${image})` : "none")};
-    background-size: cover;
-    background-position: center;
+    object-fit: contain;
+    object-position: center;
 `
 
 const InfromContainer = styled.div`

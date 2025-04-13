@@ -1,6 +1,6 @@
 import { AxiosError } from "axios"
 import { instance } from ".."
-import { UpdatePortfolio, Portfolio } from "../portfolio/type"
+import { Portfolio } from "./type"
 
 export default class PortfolioService {
     static async getPortfolio(): Promise<Portfolio> {
@@ -13,9 +13,13 @@ export default class PortfolioService {
         }
     }
 
-    static async updatePortfolio(data: UpdatePortfolio): Promise<number> {
+    static async updatePortfolio(data: FormData): Promise<number> {
         try {
-            const response = await instance.put("/user", data)
+            const response = await instance.put("/user", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             return response.status
         } catch (error) {
             if (error instanceof AxiosError)

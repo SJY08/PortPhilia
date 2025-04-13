@@ -8,6 +8,7 @@ import TagContainer from "../../components/view/tag/tagContainer"
 import styled from "styled-components"
 import Project from "../../components/view/project/project"
 import { color } from "../../styles/colors"
+import { ProjectType } from "../../apis/project/type"
 
 // 프로필 데이터 인터페이스
 export interface ProfileData {
@@ -17,15 +18,6 @@ export interface ProfileData {
     phone: string
     email: string
     edu: string
-}
-
-export interface ProjectType {
-    id?: number
-    title: string
-    description: string
-    link: string
-    tech_stack: string[]
-    i_do: string
 }
 
 interface Props {
@@ -71,8 +63,8 @@ const generatePages = ({
             <Wrapper key={i}>
                 <Project
                     title={v.title}
-                    skills={v.skill}
-                    explain={v.explain}
+                    skills={v.tech_stack}
+                    explain={v.description}
                     i_do={v.i_do}
                 />
             </Wrapper>

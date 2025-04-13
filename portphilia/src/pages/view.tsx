@@ -5,15 +5,11 @@ import { color } from "../styles/colors"
 import { useState, useEffect } from "react"
 import generatePages from "../utils/view/generatePages"
 import exportToPDF from "../utils/savePDF"
+import PortfolioService from "../apis/portfolio"
+import ProjectsService from "../apis/project"
+import { ProjectType } from "../apis/project/type"
 
-interface Project {
-    title: string
-    explain: string
-    skill: string[]
-    i_do: string
-}
-
-interface ProfileData {
+export interface ProfileData {
     image: string | null
     name: string
     birth: string
@@ -23,85 +19,68 @@ interface ProfileData {
 }
 
 function View() {
-    const [license, setLicense] = useState<string[]>(["정보처리기능사"])
-    const [skill, setSkill] = useState<string[]>([
-        "react",
-        "next.js",
-        "typescript",
-        "react-query",
-        "axios",
-        "styled-components",
-        "tailwindcss",
-        "bootstrap",
-    ])
+    const [license, setLicense] = useState<string[]>([])
+    const [skill, setSkill] = useState<string[]>([])
     const [pages, setPages] = useState<React.ReactNode[][]>([])
-    const [text, setText] =
-        useState<string>(`스스로의 성장을 위해 계속 알아나가려 노력하는 **프론트엔드 개발자, 서지유** 입니다.
-- 대덕소프트웨어마이스터고등학교에 재학 중이며, 프론트엔드 개발자가 되기 위해 공부 중입니다.
-- 실습 활동을 통해 항상 새로운 것에 도전하려 노력합니다.
-- 원하는 기능 구현을 위해 자료를 찾아보고, 코드에 대해 이해를 하는 것에 재미를 느낍니다.`)
+    const [text, setText] = useState<string>("")
+    const [intro, setIntro] = useState<string>("")
 
-    const [intro, setIntro] = useState<string>(
-        "노력하고 성장하며 공부하는 프론트엔드 개발자입니다."
-    )
+    const [projects, setProjects] = useState<ProjectType[]>([])
 
-    const [dummy, setDummy] = useState<Project[]>([
-        {
-            title: "portphilia",
-            explain: "it's a service to help writing portfolio for developers",
-            skill: ["node.js", "react", "typescript", "figma"],
-            i_do: "design, publishing, api linking",
-        },
-        {
-            title: "diaream",
-            explain: "it's a sleeping diary",
-            skill: ["node.js", "next.js", "typescript", "figma", "axios"],
-            i_do: "design, publishing, api linking, server",
-        },
-        {
-            title: "project3",
-            explain: "another project",
-            skill: ["react", "express"],
-            i_do: "backend",
-        },
-        {
-            title: "project4",
-            explain: "awesome work",
-            skill: ["angular", "firebase"],
-            i_do: "frontend",
-        },
-        {
-            title: "project5",
-            explain: "new startup",
-            skill: ["vue", "node.js"],
-            i_do: "fullstack",
-        },
-    ])
-
-    const profileData: ProfileData = {
-        image: null,
-        name: "서지유",
-        birth: "2000-01-01",
-        phone: "010-0000-0000",
-        email: "example@example.com",
-        edu: "대덕소프트웨어마이스터고등학교",
-    }
+    const [profileData, setProfileData] = useState<ProfileData | null>(null)
+    useEffect(() => {
+        async function fetchPortfolio() {
+            try {
+                const portfolio = await PortfolioService.getPortfolio()
+                const project = await ProjectsService.getProjects()
+                const newProfileData: ProfileData = {
+                    image: portfolio.profile_image_url
+                        ? portfolio.profile_image_url.startsWith("http")
+                            ? portfolio.profile_image_url
+                            : `http://localhost:3000${portfolio.profile_image_url}`
+                        : null,
+                    name: portfolio.name,
+                    birth: portfolio.birth_date || "",
+                    phone: portfolio.phone_number || "",
+                    email: portfolio.email || "",
+                    edu: portfolio.education || "",
+                }
+                setProfileData(newProfileData)
+                setIntro(portfolio.short_intro || "")
+                setText(portfolio.bio || "")
+                setProjects(project)
+                setSkill(portfolio.tech_stack || [])
+                setLicense(portfolio.certifications || [])
+            } catch (error) {
+                console.error("포트폴리오 가져오기 실패", error)
+            }
+        }
+        fetchPortfolio()
+    }, [])
 
     useEffect(() => {
-        const timer = setTimeout(() => {
+        async function fetchProjects() {
+            try {
+            } catch (error) {
+                console.error("프로젝트 가져오기 실패", error)
+            }
+        }
+        fetchProjects()
+    }, [])
+
+    useEffect(() => {
+        if (profileData) {
             generatePages({
                 skill,
                 license,
                 setPages,
-                datas: dummy,
+                datas: projects,
                 text,
                 profileData,
                 intro,
             })
-        }, 200)
-
-        return () => clearTimeout(timer)
-    }, [skill, license, dummy, text, profileData]) // pages 제거
+        }
+    }, [skill, license, projects, text, profileData, intro])
 
     return (
         <>
