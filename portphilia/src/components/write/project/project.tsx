@@ -44,6 +44,7 @@ const Container = styled.div`
     padding: 10px;
     box-shadow: 0 0 5px #00000040;
     position: relative;
+    white-space: pre;
 `
 
 const Title = styled.h1`

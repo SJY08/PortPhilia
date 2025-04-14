@@ -1,6 +1,6 @@
 import { AxiosError } from "axios"
 import { instance } from ".."
-import { ProjectType } from "./type"
+import { ProjectType, ProjectTypeWithoutId } from "./type"
 
 export default class ProjectsService {
     static async getProjects(): Promise<ProjectType[]> {
@@ -37,7 +37,7 @@ export default class ProjectsService {
         }
     }
 
-    static async addProject(project: ProjectType): Promise<number> {
+    static async addProject(project: ProjectTypeWithoutId): Promise<number> {
         try {
             const payload = {
                 project_name: project.title,
@@ -56,7 +56,7 @@ export default class ProjectsService {
 
     static async updateProject(
         projectId: string | number,
-        project: ProjectType
+        project: ProjectTypeWithoutId
     ): Promise<number> {
         try {
             const payload = {

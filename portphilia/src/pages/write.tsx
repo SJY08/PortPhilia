@@ -13,6 +13,7 @@ import { Portfolio } from "../apis/portfolio/type"
 import ProjectsService from "../apis/project"
 import { ProjectType } from "../apis/project/type"
 import { tempCookie } from "../utils/tempCookie"
+import EditProjectModal from "../components/write/project/editModal"
 
 function Write() {
     const [name, setName] = useState<string>("")
@@ -27,7 +28,17 @@ function Write() {
     const [skills, setSkills] = useState<string[]>([])
     const [license, setLicense] = useState<string[]>([])
     const [add, setAdd] = useState<boolean>(false)
+    const [edit, setEdit] = useState<boolean>(false)
     const [projects, setProjects] = useState<ProjectType[]>([])
+    const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
+        null
+    )
+
+    const selectHandler = (project: ProjectType) => {
+        setSelectedProject(project)
+        console.log(selectedProject)
+        setEdit(true)
+    }
 
     useEffect(() => {
         async function fetchPortfolio() {
@@ -81,6 +92,15 @@ function Write() {
         const objectUrl = URL.createObjectURL(file)
         setImagePreview(objectUrl)
     }
+
+    const refresh = async () => {
+        const data = await ProjectsService.getProjects()
+        setProjects(data)
+    }
+
+    useEffect(() => {
+        refresh()
+    }, [])
 
     const handleKeyDown = useCallback(
         async (event: KeyboardEvent) => {
@@ -142,6 +162,13 @@ function Write() {
         <>
             <SideBar />
             {add && <AddProjectModal show={add} setFunc={setAdd} />}
+            {edit && selectedProject && (
+                <EditProjectModal
+                    project_prop={selectedProject}
+                    setFunc={setEdit}
+                    refresh={refresh}
+                />
+            )}
             <Background>
                 <Container>
                     <ProfileContainer>
@@ -187,6 +214,7 @@ function Write() {
                                 explain={project.description}
                                 i_do={project.i_do}
                                 skill={project.tech_stack}
+                                onClick={() => selectHandler(project)}
                             />
                         ))}
                 </Container>

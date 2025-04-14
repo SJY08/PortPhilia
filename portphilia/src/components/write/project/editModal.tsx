@@ -4,80 +4,77 @@ import Modal from "react-bootstrap/Modal"
 import Input from "../../common/input"
 import TagInput from "../../write/tag/tagInput"
 import styled from "styled-components"
-
-interface project {
-    title: string
-    explain: string
-    skill: string[]
-    i_do: string
-}
+import { ProjectType } from "../../../apis/project/type"
+import ProjectsService from "../../../apis/project"
 
 interface props {
-    show: boolean
-    setFunc: React.Dispatch<
-        React.SetStateAction<{
-            show: boolean
-            data: project | null
-        }>
-    >
-    title: string
-    explain: string
-    skill: string[]
-    i_do: string
-    onClick?: (updatedData: project) => void
+    setFunc: React.Dispatch<React.SetStateAction<boolean>>
+    project_prop: ProjectType
+    refresh: () => void
 }
 
-function EditProjectModal({
-    show,
-    setFunc,
-    title,
-    explain,
-    skill,
-    i_do,
-    onClick,
-}: props) {
-    const [skills, setSkills] = useState<string[]>(skill)
-    const [title1, setTitle] = useState<string>(title)
-    const [explain1, setExplain] = useState<string>(explain)
-    const [iDo, setIDo] = useState<string>(i_do)
+function EditProjectModal({ setFunc, project_prop, refresh }: props) {
+    const [project, setProject] = useState<ProjectType>(project_prop)
+
+    const updateTechStack: React.Dispatch<React.SetStateAction<string[]>> = (
+        action
+    ) => {
+        setProject((prevProject) => ({
+            ...prevProject,
+            tech_stack:
+                typeof action === "function"
+                    ? action(prevProject.tech_stack)
+                    : action,
+        }))
+    }
+
+    const submitHandler = async () => {
+        const update = {
+            title: project.title,
+            description: project.description,
+            tech_stack: project.tech_stack,
+            i_do: project.i_do,
+        }
+
+        try {
+            const result = await ProjectsService.updateProject(
+                project_prop.id,
+                update
+            )
+            if (result == 200 || result == 201) {
+                refresh()
+                setFunc(false)
+            }
+        } catch (e) {
+            alert("수정에 실패했습니다")
+            console.log(e)
+        }
+    }
+
+    const deleteHandler = async () => {
+        try {
+            const result = await ProjectsService.deleteProject(project_prop.id)
+            if (result == 200 || result == 201) {
+                refresh()
+                setFunc(false)
+            }
+        } catch (e) {
+            alert("삭제에 실패했습니다")
+            console.log(e)
+        }
+    }
 
     useEffect(() => {
-        if (show) {
-            setData(skill, title, explain, i_do)
+        if (project_prop) {
+            setProject({ ...project_prop })
         }
-        console.log(skills, title1, explain1, iDo)
-    }, [show])
-
-    function setData(
-        skill: string[] = [],
-        title: string = "",
-        explain: string = "",
-        i_do: string = ""
-    ) {
-        setSkills(skill || [])
-        setTitle(title || "")
-        setExplain(explain || "")
-        setIDo(i_do || "")
-    }
-
-    const handleSave = () => {
-        const updatedData: project = {
-            title: title1,
-            explain: explain1,
-            skill: skills,
-            i_do: iDo,
-        }
-        if (onClick) {
-            onClick(updatedData)
-        }
-        setFunc({ show: false, data: updatedData })
-    }
+    }, [project_prop])
 
     return (
         <>
             <Modal
-                show={show}
-                onHide={() => setFunc({ show: false, data: null })}
+                onHide={() => setFunc(false)}
+                show={true}
                 backdrop="static"
                 keyboard={false}
                 centered
@@ -89,37 +86,55 @@ function EditProjectModal({
                     <Container>
                         <Input
                             label="프로젝트명"
-                            value={title1}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={project.title}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) =>
+                                setProject({
+                                    ...project,
+                                    title: e.target.value,
+                                })
+                            }
                         />
                         <Input
                             label="프로젝트소개"
                             input="textarea"
-                            value={explain1}
-                            onChange={(e) => setExplain(e.target.value)}
+                            value={project.description}
+                            onTextAreaChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                            ) =>
+                                setProject({
+                                    ...project,
+                                    description: e.target.value,
+                                })
+                            }
                         />
                         <TagInput
                             label="사용 기술"
-                            setTags={setSkills}
-                            tags={skills}
+                            setTags={updateTechStack}
+                            tags={project.tech_stack}
                         />
                         <Input
                             label="내가 한 일"
                             input="textarea"
-                            value={iDo}
-                            onChange={(e) => setIDo(e.target.value)}
+                            value={project.i_do}
+                            onTextAreaChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                            ) =>
+                                setProject({
+                                    ...project,
+                                    i_do: e.target.value,
+                                })
+                            }
                         />
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
-                        variant="secondary"
-                        onClick={() => setFunc({ show: false, data: null })}
-                    >
+                    <Button variant="secondary" onClick={() => setFunc(false)}>
                         닫기
                     </Button>
 
-                    <Button variant="primary" onClick={handleSave}>
+                    <Button variant="primary" onClick={submitHandler}>
                         수정하기
                     </Button>
                 </Modal.Footer>
