@@ -36,6 +36,7 @@ function Write() {
                 console.log("현재 Access Token:", token)
                 const portfolio: Portfolio =
                     await PortfolioService.getPortfolio()
+                const project = await ProjectsService.getProjects()
 
                 setName(portfolio.name)
                 setBirth(portfolio.birth_date || "")
@@ -46,6 +47,7 @@ function Write() {
                 setIntro(portfolio.bio || "")
                 setSkills(portfolio.tech_stack || [])
                 setLicense(portfolio.certifications || [])
+                setProjects(project)
 
                 if (portfolio.profile_image_url) {
                     const fullUrl = `http://localhost:3000${portfolio.profile_image_url}`
@@ -53,6 +55,7 @@ function Write() {
                 }
 
                 console.log("📂 Portfolio:", portfolio)
+                console.log(project)
             } catch (error) {
                 console.error("포트폴리오 가져오기 실패", error)
             }
@@ -176,7 +179,6 @@ function Write() {
                         setTags={setLicense}
                     />
                     <AddProject onClick={() => setAdd(true)} />
-                    {/* 서버에서 불러온 프로젝트 목록 렌더링 */}
                     {projects.length > 0 &&
                         projects.map((project, index) => (
                             <Project
