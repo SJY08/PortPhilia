@@ -3,9 +3,23 @@ import { color } from "../../styles/colors"
 import Portphilia from "../../assets/PortPhilia.png"
 import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { tempCookie } from "../../utils/tempCookie"
+import { IoPersonSharp } from "react-icons/io5"
 
 function Header() {
     const navigate = useNavigate()
+    const [isLogin, setIsLogin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const cookie = tempCookie.getAccessToken()
+
+        if (cookie) {
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+        }
+    })
 
     return (
         <>
@@ -20,12 +34,22 @@ function Header() {
                     />
 
                     <Wrapper>
-                        <Signup onClick={() => navigate("/signup")}>
-                            회원가입
-                        </Signup>
-                        <Button onClick={() => navigate("/login")}>
-                            로그인
-                        </Button>
+                        {isLogin ? (
+                            <>
+                                <Profile>
+                                    <IoPersonSharp />
+                                </Profile>
+                            </>
+                        ) : (
+                            <>
+                                <Signup onClick={() => navigate("/signup")}>
+                                    회원가입
+                                </Signup>
+                                <Button onClick={() => navigate("/login")}>
+                                    로그인
+                                </Button>
+                            </>
+                        )}
                     </Wrapper>
                 </Container>
             </Background>
@@ -64,4 +88,15 @@ const Signup = styled.div`
     font-size: 16px;
     color: ${color.blue[500]};
     cursor: pointer;
+`
+
+const Profile = styled.div`
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background-color: ${color.gray[50]};
+    color: ${color.gray[200]};
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
