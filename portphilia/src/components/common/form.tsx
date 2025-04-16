@@ -25,4 +25,5 @@ const Container = styled.div`
     box-shadow: 0px 0px 5px ${color.gray[100]};
     position: relative;
     gap: 50px;
+    top: 50px;
 `

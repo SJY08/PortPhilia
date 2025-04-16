@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import AuthService from "../apis/auth"
-import Header from "../components/common/header"
 
 function Login() {
     const navigate = useNavigate()
@@ -24,8 +23,6 @@ function Login() {
     return (
         <>
             <Background>
-                <Header />
-
                 <Form>
                     <Title>로그인</Title>
                     <InputWrapper>
@@ -82,7 +79,6 @@ const Background = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: start;
-    gap: 40px;
     align-items: center;
     background: linear-gradient(white, ${color.blue[50]});
 `

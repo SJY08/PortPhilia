@@ -4,10 +4,13 @@ import Login from "./pages/login"
 import Signup from "./pages/signup"
 import Write from "./pages/write"
 import View from "./pages/view"
+import Header from "./components/common/header"
 
 function Router() {
     return (
         <BrowserRouter>
+            <Header />
+
             <Routes>
                 <Route path="/" element={<Start />} />
                 <Route path="/login" element={<Login />} />

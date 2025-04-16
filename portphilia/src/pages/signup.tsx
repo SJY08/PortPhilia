@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import AuthService from "../apis/auth"
-import Header from "../components/common/header"
 
 function Signup() {
     const navigate = useNavigate()
@@ -33,8 +32,6 @@ function Signup() {
     return (
         <>
             <Background>
-                <Header />
-
                 <Form>
                     <Title>회원가입</Title>
                     <InputWrapper>

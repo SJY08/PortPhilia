@@ -14,7 +14,6 @@ import ProjectsService from "../apis/project"
 import { ProjectType } from "../apis/project/type"
 import { tempCookie } from "../utils/tempCookie"
 import EditProjectModal from "../components/write/project/editModal"
-import Header from "../components/common/header"
 
 function Write() {
     const [name, setName] = useState<string>("")
@@ -161,7 +160,6 @@ function Write() {
 
     return (
         <>
-            <Header />
             <SideBar />
             {add && <AddProjectModal show={add} setFunc={setAdd} />}
             {edit && selectedProject && (

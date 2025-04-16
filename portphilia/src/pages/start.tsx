@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import Header from "../components/common/header"
 import Banner from "../components/start/banner"
 import List from "../components/start/list"
 import Content from "../components/start/content"
@@ -8,7 +7,6 @@ function Start() {
     return (
         <>
             <Container>
-                <Header />
                 <Banner />
                 <List />
                 <Content />
