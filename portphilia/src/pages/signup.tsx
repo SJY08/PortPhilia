@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import AuthService from "../apis/auth"
+import Header from "../components/common/header"
 
 function Signup() {
     const navigate = useNavigate()
@@ -32,6 +33,8 @@ function Signup() {
     return (
         <>
             <Background>
+                <Header />
+
                 <Form>
                     <Title>회원가입</Title>
                     <InputWrapper>
@@ -93,7 +96,9 @@ const Background = styled.div`
     width: 100%;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: start;
+    gap: 40px;
     align-items: center;
     background: linear-gradient(white, ${color.blue[50]});
 `
