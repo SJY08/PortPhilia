@@ -8,6 +8,7 @@ import exportToPDF from "../utils/savePDF"
 import PortfolioService from "../apis/portfolio"
 import ProjectsService from "../apis/project"
 import { ProjectType } from "../apis/project/type"
+import Header from "../components/common/header"
 
 export interface ProfileData {
     image: string | null
@@ -84,6 +85,7 @@ function View() {
 
     return (
         <>
+            <Header />
             <SideBar onClick={exportToPDF} />
             <Container>
                 {pages.map((page, idx) => (

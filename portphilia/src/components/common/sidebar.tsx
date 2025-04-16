@@ -42,7 +42,7 @@ export default SideBar
 
 const Container = styled.div`
     position: fixed;
-    top: 40px;
+    top: 100px;
     right: 40px;
     width: 200px;
 `
