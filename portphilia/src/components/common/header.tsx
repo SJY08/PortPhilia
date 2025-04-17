@@ -3,57 +3,74 @@ import { color } from "../../styles/colors"
 import Portphilia from "../../assets/PortPhilia.png"
 import { Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { tempCookie } from "../../utils/tempCookie"
 import { IoPersonSharp } from "react-icons/io5"
+import Dropdown from "./dropdown"
 
 function Header() {
     const navigate = useNavigate()
     const [isLogin, setIsLogin] = useState<boolean>(false)
+    const [show, setShow] = useState<boolean>(false)
+    const wrapperRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const cookie = tempCookie.getAccessToken()
+        setIsLogin(!!cookie)
+    }, [])
 
-        if (cookie) {
-            setIsLogin(true)
-        } else {
-            setIsLogin(false)
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                wrapperRef.current &&
+                !wrapperRef.current.contains(e.target as Node)
+            ) {
+                setShow(false)
+            }
         }
-    })
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
 
     return (
-        <>
-            <Background>
-                <Container>
-                    <img
-                        src={Portphilia}
-                        alt="로고"
-                        height={20}
-                        onClick={() => navigate("/")}
-                        style={{ cursor: "pointer" }}
-                    />
-
-                    <Wrapper>
-                        {isLogin ? (
-                            <>
-                                <Profile>
-                                    <IoPersonSharp />
-                                </Profile>
-                            </>
-                        ) : (
-                            <>
-                                <Signup onClick={() => navigate("/signup")}>
-                                    회원가입
-                                </Signup>
-                                <Button onClick={() => navigate("/login")}>
-                                    로그인
-                                </Button>
-                            </>
-                        )}
-                    </Wrapper>
-                </Container>
-            </Background>
-        </>
+        <Background>
+            <Container>
+                <img
+                    src={Portphilia}
+                    alt="로고"
+                    height={20}
+                    onClick={() => navigate("/")}
+                    style={{ cursor: "pointer", userSelect: "none" }}
+                />
+                <Wrapper>
+                    {isLogin ? (
+                        <ProfileWrapper ref={wrapperRef}>
+                            <Profile
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShow(!show)
+                                }}
+                            >
+                                <IoPersonSharp />
+                            </Profile>
+                            {show && <Dropdown />}
+                        </ProfileWrapper>
+                    ) : (
+                        <>
+                            <Signup onClick={() => navigate("/signup")}>
+                                회원가입
+                            </Signup>
+                            <Button onClick={() => navigate("/login")}>
+                                로그인
+                            </Button>
+                        </>
+                    )}
+                </Wrapper>
+            </Container>
+        </Background>
     )
 }
 
@@ -81,6 +98,7 @@ const Wrapper = styled.div`
     margin-left: auto;
     display: flex;
     gap: 20px;
+    position: relative;
 `
 
 const Signup = styled.div`
@@ -99,4 +117,9 @@ const Profile = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+`
+
+const ProfileWrapper = styled.div`
+    position: relative;
 `
