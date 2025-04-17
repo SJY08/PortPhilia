@@ -3,7 +3,6 @@
    License: none (public domain)
 */
 
-/* Pretendard 폰트 선언 */
 @font-face {
     font-family: "Pretendard";
     src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
@@ -12,12 +11,10 @@
     font-style: normal;
 }
 
-/* 기본 폰트 설정 */
 * {
     font-family: "Pretendard", sans-serif;
 }
 
-/* CSS 리셋 */
 html,
 body {
     margin: 0;
@@ -31,7 +28,10 @@ body {
     background: #fff;
 }
 
-/* 마크다운 리스트 스타일 */
+body {
+    overflow-y: scroll;
+}
+
 ol,
 ul {
     margin: 1em 0;
@@ -54,7 +54,6 @@ li {
     margin-bottom: 0.5em;
 }
 
-/* 마크다운 요소 스타일 */
 h1,
 h2,
 h3,
@@ -126,8 +125,6 @@ th {
     font-weight: bold;
 }
 
-/* w-md-editor 및 관련 요소 설정 */
-/* textarea 내에 해당 요소들이 존재할 경우 */
 textarea .w-md-editor-content .w-md-editor-text-input {
     font-size: 16px !important;
     line-height: 1.5 !important;
