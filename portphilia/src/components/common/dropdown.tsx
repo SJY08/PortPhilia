@@ -1,9 +1,19 @@
 import styled from "styled-components"
 import { color } from "../../styles/colors"
 import { useNavigate } from "react-router-dom"
+import AuthService from "../../apis/auth"
 
 function Dropdown() {
     const navigate = useNavigate()
+
+    const logoutHandler = async () => {
+        const result = await AuthService.logout()
+        if (result == 200 || result == 201) {
+            navigate("/")
+        } else {
+            alert("로그아웃에 실패했습니다")
+        }
+    }
 
     const data = [
         {
@@ -16,7 +26,7 @@ function Dropdown() {
         },
         {
             title: "로그아웃",
-            onClick: () => navigate("/"),
+            onClick: logoutHandler,
         },
     ]
 

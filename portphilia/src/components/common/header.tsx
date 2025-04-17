@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { color } from "../../styles/colors"
 import Portphilia from "../../assets/PortPhilia.png"
 import { Button } from "react-bootstrap"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import { tempCookie } from "../../utils/tempCookie"
 import { IoPersonSharp } from "react-icons/io5"
@@ -10,14 +10,20 @@ import Dropdown from "./dropdown"
 
 function Header() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [isLogin, setIsLogin] = useState<boolean>(false)
     const [show, setShow] = useState<boolean>(false)
     const wrapperRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const cookie = tempCookie.getAccessToken()
-        setIsLogin(!!cookie)
-    }, [])
+        if (cookie) {
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+            setShow(false)
+        }
+    }, [location])
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
