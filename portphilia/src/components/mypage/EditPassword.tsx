@@ -4,7 +4,6 @@ import { Button, Modal } from "react-bootstrap"
 import { useState } from "react"
 import Input from "../common/input"
 import AuthService from "../../apis/auth"
-import PortfolioService from "../../apis/portfolio"
 
 function EditPassword() {
     const [modal, setModal] = useState<boolean>(false)
