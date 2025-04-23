@@ -82,4 +82,51 @@ export default class AuthService {
             return 500
         }
     }
+
+    static async verifyPassword(password: string): Promise<number> {
+        try {
+            const accessToken = tempCookie.getAccessToken()
+            const refreshToken = tempCookie.getRefreshToken()
+
+            if (!accessToken && !refreshToken)
+                throw new Error("로그인이 필요합니다")
+
+            const response = await instance.post(
+                "/auth/verifyPassword",
+                { password },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            )
+            return response.status
+        } catch (error) {
+            if (error instanceof AxiosError)
+                return error.response?.status ?? 500
+            return 500
+        }
+    }
+
+    static async changePassword(newPassword: string): Promise<number> {
+        try {
+            const accessToken = tempCookie.getAccessToken()
+            if (!accessToken) throw new Error("인증 토큰이 없습니다.")
+
+            const response = await instance.post(
+                "/auth/changePassword",
+                { newPassword },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            )
+            return response.status
+        } catch (error) {
+            if (error instanceof AxiosError)
+                return error.response?.status ?? 500
+            return 500
+        }
+    }
 }

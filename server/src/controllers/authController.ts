@@ -138,12 +138,10 @@ export async function verifyPassword(req: Request, res: Response) {
         const isValid = await bcrypt.compare(password, user.password)
 
         if (!isValid) {
-            return res
-                .status(401)
-                .json({
-                    valid: false,
-                    message: "비밀번호가 일치하지 않습니다.",
-                })
+            return res.status(401).json({
+                valid: false,
+                message: "비밀번호가 일치하지 않습니다.",
+            })
         }
 
         return res
@@ -151,5 +149,39 @@ export async function verifyPassword(req: Request, res: Response) {
             .json({ valid: true, message: "비밀번호가 일치합니다." })
     } catch (error) {
         return res.status(403).json({ error: "유효하지 않은 토큰입니다." })
+    }
+}
+
+export async function changePassword(req: Request, res: Response) {
+    const authHeader = req.headers.authorization
+    const token = authHeader && authHeader.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({ error: "토큰이 없습니다." })
+    }
+
+    const { newPassword } = req.body
+    if (!newPassword || typeof newPassword !== "string") {
+        return res.status(400).json({ error: "새 비밀번호를 입력하세요." })
+    }
+
+    try {
+        const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as {
+            userId: number
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+        await prisma.user.update({
+            where: { id: decoded.userId },
+            data: { password: hashedPassword },
+        })
+
+        return res
+            .status(200)
+            .json({ message: "비밀번호가 성공적으로 변경되었습니다." })
+    } catch (error) {
+        console.error("changePassword error:", error)
+        return res.status(500).json({ error: "서버 에러" })
     }
 }
