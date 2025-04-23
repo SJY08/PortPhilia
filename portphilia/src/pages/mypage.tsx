@@ -150,4 +150,5 @@ const Wrapper = styled.div`
     align-items: center;
     flex-direction: column;
     gap: 20px;
+    margin-bottom: 20px;
 `
