@@ -105,25 +105,27 @@ function Mypage() {
             <Container>
                 <Profile />
 
-                <ButtonContainer title="비밀번호" explain="비밀번호 변경">
-                    <Button
-                        onClick={() => {
-                            setModal(true)
-                            setPassword("")
-                        }}
-                    >
-                        비밀번호 변경
-                    </Button>
-                </ButtonContainer>
+                <Wrapper>
+                    <ButtonContainer title="비밀번호" explain="비밀번호 변경">
+                        <Button
+                            onClick={() => {
+                                setModal(true)
+                                setPassword("")
+                            }}
+                        >
+                            비밀번호 변경
+                        </Button>
+                    </ButtonContainer>
 
-                <ButtonContainer
-                    title="계정삭제"
-                    explain="계정 삭제 시 작성한 모든 정보가 삭제됩니다"
-                >
-                    <Button variant="danger" onClick={deleteUser}>
-                        계정삭제
-                    </Button>
-                </ButtonContainer>
+                    <ButtonContainer
+                        title="계정삭제"
+                        explain="계정 삭제 시 작성한 모든 정보가 삭제됩니다"
+                    >
+                        <Button variant="danger" onClick={deleteUser}>
+                            계정삭제
+                        </Button>
+                    </ButtonContainer>
+                </Wrapper>
             </Container>
         </>
     )
@@ -138,4 +140,14 @@ const Container = styled.div`
     align-items: center;
     flex-direction: column;
     padding-top: 20px;
+    gap: 50px;
+`
+
+const Wrapper = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
 `
