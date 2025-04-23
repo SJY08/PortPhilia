@@ -127,6 +127,18 @@ function EditProjectModal({ setFunc, project_prop, refresh }: props) {
                                 })
                             }
                         />
+
+                        <Button
+                            variant="danger"
+                            style={{
+                                marginLeft: "auto",
+                                marginTop: "20px",
+                                width: "100px",
+                            }}
+                            onClick={deleteHandler}
+                        >
+                            삭제하기
+                        </Button>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
