@@ -38,7 +38,7 @@ export default Profile
 
 const Container = styled.div`
     width: 400px;
-    height: 350px;
+    height: 400px;
     padding: 40px;
     border-radius: 12px;
     border: 1px solid ${color.blue[500]};
