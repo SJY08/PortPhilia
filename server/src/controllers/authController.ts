@@ -185,3 +185,27 @@ export async function changePassword(req: Request, res: Response) {
         return res.status(500).json({ error: "서버 에러" })
     }
 }
+
+export async function deleteUser(req: Request, res: Response) {
+    const authHeader = req.headers.authorization
+    const token = authHeader && authHeader.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({ error: "토큰이 없습니다." })
+    }
+
+    try {
+        const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as {
+            userId: number
+        }
+
+        await prisma.user.delete({
+            where: { id: decoded.userId },
+        })
+
+        return res.status(200).json({ message: "회원 탈퇴가 완료되었습니다." })
+    } catch (error) {
+        console.error("deleteUser error:", error)
+        return res.status(500).json({ error: "서버 에러" })
+    }
+}

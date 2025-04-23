@@ -5,8 +5,10 @@ import { Button, Modal } from "react-bootstrap"
 import { useState } from "react"
 import Input from "../components/common/input"
 import AuthService from "../apis/auth"
+import { useNavigate } from "react-router-dom"
 
 function Mypage() {
+    const navigate = useNavigate()
     const [modal, setModal] = useState<boolean>(false)
     const [verifyPwd, setVerifyPwd] = useState<boolean>(true)
     const [password, setPassword] = useState<string>("")
@@ -28,6 +30,16 @@ function Mypage() {
             setModal(false)
         } else {
             alert("비밀번호 변경에 실패했습니다.")
+        }
+    }
+
+    const deleteUser = async () => {
+        const reuslt = await AuthService.deleteUser()
+        if (reuslt == 200) {
+            alert("계정이 삭제되었습니다")
+            navigate("/")
+        } else {
+            alert("계정 삭제를 실패했습니다")
         }
     }
 
@@ -101,6 +113,15 @@ function Mypage() {
                         }}
                     >
                         비밀번호 변경
+                    </Button>
+                </ButtonContainer>
+
+                <ButtonContainer
+                    title="계정삭제"
+                    explain="계정 삭제 시 작성한 모든 정보가 삭제됩니다"
+                >
+                    <Button variant="danger" onClick={deleteUser}>
+                        계정삭제
                     </Button>
                 </ButtonContainer>
             </Container>

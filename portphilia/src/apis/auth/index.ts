@@ -129,4 +129,24 @@ export default class AuthService {
             return 500
         }
     }
+
+    static async deleteUser(): Promise<number> {
+        try {
+            const accessToken = tempCookie.getAccessToken()
+            if (!accessToken) throw new Error("인증 토큰이 없습니다.")
+
+            const response = await instance.delete("/auth/delete", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            })
+
+            tempCookie.clearTokens()
+            return response.status
+        } catch (error) {
+            if (error instanceof AxiosError)
+                return error.response?.status ?? 500
+            return 500
+        }
+    }
 }
