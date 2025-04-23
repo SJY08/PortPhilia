@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react"
 import { tempCookie } from "../../utils/tempCookie"
 import { IoPersonSharp } from "react-icons/io5"
 import Dropdown from "./dropdown"
+import AuthService from "../../apis/auth"
 
 function Header() {
     const navigate = useNavigate()
@@ -16,13 +17,16 @@ function Header() {
     const wrapperRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        const cookie = tempCookie.getAccessToken()
-        if (cookie) {
-            setIsLogin(true)
-        } else {
-            setIsLogin(false)
-            setShow(false)
+        const checkLogin = async () => {
+            const result = await AuthService.verify()
+            if (result == 200) setIsLogin(true)
+            else {
+                tempCookie.clearTokens()
+                setIsLogin(false)
+            }
         }
+
+        checkLogin()
     }, [location])
 
     useEffect(() => {
@@ -62,7 +66,7 @@ function Header() {
                             >
                                 <IoPersonSharp />
                             </Profile>
-                            {show && <Dropdown />}
+                            {show && <Dropdown setShow={setShow} />}
                         </ProfileWrapper>
                     ) : (
                         <>

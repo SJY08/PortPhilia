@@ -2,8 +2,13 @@ import styled from "styled-components"
 import { color } from "../../styles/colors"
 import { useNavigate } from "react-router-dom"
 import AuthService from "../../apis/auth"
+import React, { SetStateAction } from "react"
 
-function Dropdown() {
+interface props {
+    setShow: React.Dispatch<SetStateAction<boolean>>
+}
+
+function Dropdown({ setShow }: props) {
     const navigate = useNavigate()
 
     const logoutHandler = async () => {
@@ -18,15 +23,24 @@ function Dropdown() {
     const data = [
         {
             title: "내 포트폴리오",
-            onClick: () => navigate("/write"),
+            onClick: () => {
+                navigate("/write")
+                setShow(false)
+            },
         },
         {
             title: "마이페이지",
-            onClick: () => navigate("/mypage"),
+            onClick: () => {
+                navigate("/mypage")
+                setShow(false)
+            },
         },
         {
             title: "로그아웃",
-            onClick: logoutHandler,
+            onClick: () => {
+                logoutHandler()
+                setShow(false)
+            },
         },
     ]
 

@@ -71,4 +71,15 @@ export default class AuthService {
             return 500
         }
     }
+
+    static async verify(): Promise<number> {
+        try {
+            const response = await instance.get("/auth/verify")
+            return response.status
+        } catch (error) {
+            if (error instanceof AxiosError)
+                return error.response?.status ?? 500
+            return 500
+        }
+    }
 }

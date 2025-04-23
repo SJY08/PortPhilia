@@ -63,23 +63,48 @@ export async function login(req: Request, res: Response) {
             where: { username },
         })
         if (!user)
-            return res
-                .status(400)
-                .json({
-                    error: "유효하지 않은 아이디 혹은 비밀번호입니다. notuser",
-                })
+            return res.status(400).json({
+                error: "유효하지 않은 아이디 혹은 비밀번호입니다. notuser",
+            })
 
         const validPassword = await bcrypt.compare(password, user.password)
         if (!validPassword)
-            return res
-                .status(400)
-                .json({
-                    error: "유효하지 않은 아이디 혹은 비밀번호입니다. notvalidpassword",
-                })
+            return res.status(400).json({
+                error: "유효하지 않은 아이디 혹은 비밀번호입니다. notvalidpassword",
+            })
 
         const tokens = generateTokens(user.id)
         res.json({ user, ...tokens })
     } catch (error) {
         res.status(500).json({ error: "서버 에러" })
+    }
+}
+
+export async function verifyToken(req: Request, res: Response) {
+    const authHeader = req.headers.authorization
+    const token = authHeader && authHeader.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({ error: "토큰이 없습니다." })
+    }
+
+    try {
+        const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as {
+            userId: number
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.userId },
+        })
+
+        if (!user) {
+            return res
+                .status(404)
+                .json({ error: "존재하지 않는 사용자입니다." })
+        }
+
+        return res.status(200).json({ valid: true, userId: decoded.userId })
+    } catch (err) {
+        return res.status(403).json({ error: "유효하지 않은 토큰입니다." })
     }
 }

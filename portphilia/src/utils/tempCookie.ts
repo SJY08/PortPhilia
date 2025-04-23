@@ -1,4 +1,3 @@
-// src/utils/tempCookie.ts
 class TempCookie {
     private accessToken: string | null
     private refreshToken: string | null
