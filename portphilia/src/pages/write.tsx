@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useCallback } from "react"
 import styled from "styled-components"
 import Inform from "../components/write/profile/inform"
@@ -9,9 +11,9 @@ import Project from "../components/write/project/project"
 import AddProject from "../components/write/project/add"
 import AddProjectModal from "../components/write/project/addModal"
 import PortfolioService from "../apis/portfolio"
-import { Portfolio } from "../apis/portfolio/type"
+import type { Portfolio } from "../apis/portfolio/type"
 import ProjectsService from "../apis/project"
-import { ProjectType } from "../apis/project/type"
+import type { ProjectType } from "../apis/project/type"
 import { tempCookie } from "../utils/tempCookie"
 import EditProjectModal from "../components/write/project/editModal"
 
@@ -36,8 +38,28 @@ function Write() {
 
     const selectHandler = (project: ProjectType) => {
         setSelectedProject(project)
-        console.log(selectedProject)
         setEdit(true)
+    }
+
+    // 프로젝트 추가 성공 시 호출되는 함수
+    const handleProjectAdded = (newProject: ProjectType) => {
+        setProjects((prevProjects) => [...prevProjects, newProject])
+    }
+
+    // 프로젝트 수정 성공 시 호출되는 함수
+    const handleProjectUpdated = (updatedProject: ProjectType) => {
+        setProjects((prevProjects) =>
+            prevProjects.map((project) =>
+                project.id === updatedProject.id ? updatedProject : project
+            )
+        )
+    }
+
+    // 프로젝트 삭제 성공 시 호출되는 함수
+    const handleProjectDeleted = (deletedProjectId: string | number) => {
+        setProjects((prevProjects) =>
+            prevProjects.filter((project) => project.id !== deletedProjectId)
+        )
     }
 
     useEffect(() => {
@@ -74,33 +96,20 @@ function Write() {
         fetchPortfolio()
     }, [])
 
-    useEffect(() => {
-        async function fetchProjects() {
-            try {
-                const projectsData = await ProjectsService.getProjects()
-                setProjects(projectsData)
-            } catch (error) {
-                console.error("프로젝트 가져오기 실패", error)
-            }
-        }
-        fetchProjects()
-    }, [])
-
     const handleFileChange = (file: File) => {
         setImageFile(file)
-
         const objectUrl = URL.createObjectURL(file)
         setImagePreview(objectUrl)
     }
 
     const refresh = async () => {
-        const data = await ProjectsService.getProjects()
-        setProjects(data)
+        try {
+            const data = await ProjectsService.getProjects()
+            setProjects(data)
+        } catch (error) {
+            console.error("프로젝트 새로고침 실패", error)
+        }
     }
-
-    useEffect(() => {
-        refresh()
-    }, [])
 
     const handleKeyDown = useCallback(
         async (event: KeyboardEvent) => {
@@ -161,12 +170,20 @@ function Write() {
     return (
         <>
             <SideBar />
-            {add && <AddProjectModal show={add} setFunc={setAdd} />}
+            {add && (
+                <AddProjectModal
+                    show={add}
+                    setFunc={setAdd}
+                    onSuccess={handleProjectAdded}
+                />
+            )}
             {edit && selectedProject && (
                 <EditProjectModal
                     project_prop={selectedProject}
                     setFunc={setEdit}
                     refresh={refresh}
+                    onSuccess={handleProjectUpdated}
+                    onDelete={handleProjectDeleted}
                 />
             )}
             <Background>

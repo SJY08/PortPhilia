@@ -1,3 +1,7 @@
+"use client"
+
+import type React from "react"
+
 import { useState } from "react"
 import styled from "styled-components"
 import { color } from "../../../styles/colors"
@@ -8,9 +12,10 @@ interface Props {
     tags: string[]
     setTags: React.Dispatch<React.SetStateAction<string[]>>
     label: string
+    disabled?: boolean
 }
 
-function TagInput({ tags, setTags, label }: Props) {
+function TagInput({ tags, setTags, label, disabled = false }: Props) {
     const [text, setText] = useState<string>("")
 
     const handleTagAdd = (
@@ -20,6 +25,8 @@ function TagInput({ tags, setTags, label }: Props) {
     ) => {
         e.preventDefault()
 
+        if (disabled) return // disabled일 때 태그 추가 방지
+
         if (text.trim() !== "" && tags.length < 10) {
             setTags([...tags, text.trim()])
             setText("")
@@ -27,15 +34,18 @@ function TagInput({ tags, setTags, label }: Props) {
     }
 
     const handleTagDelete = (index: number) => {
+        if (disabled) return // disabled일 때 태그 삭제 방지
         setTags(tags.filter((_, i) => i !== index))
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return // disabled일 때 입력 방지
         if (e.target.value.length > 25) return
         setText(e.target.value)
     }
 
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (disabled) return // disabled일 때 키보드 입력 방지
         if (e.key === "Enter") {
             e.preventDefault()
             handleTagAdd(e)
@@ -46,13 +56,18 @@ function TagInput({ tags, setTags, label }: Props) {
         <>
             <Container>
                 <InputContainer>
-                    <Title>{label}</Title>
+                    <Title disabled={disabled}>{label}</Title>
                     <Input
                         type="text"
                         value={text}
-                        placeholder="태그 입력 (최대 10개, 25자 최대)"
+                        placeholder={
+                            disabled
+                                ? "비활성화됨"
+                                : "태그 입력 (최대 10개, 25자 최대)"
+                        }
                         onChange={handleInputChange}
                         onKeyDown={handleInputKeyDown}
+                        disabled={disabled}
                     />
                 </InputContainer>
 
@@ -63,6 +78,7 @@ function TagInput({ tags, setTags, label }: Props) {
                             key={index}
                             tag={tag}
                             handleTagDelete={handleTagDelete}
+                            disabled={disabled}
                         />
                     ))}
                 </OutputContainer>
@@ -106,10 +122,11 @@ const InputContainer = styled.div`
     }
 `
 
-const Title = styled.p`
+const Title = styled.p<{ disabled?: boolean }>`
     font-size: 16px;
     font-weight: 600;
-    background: ${color.blue[300]};
+    background: ${(props) =>
+        props.disabled ? color.gray[400] : color.blue[300]};
     color: white;
     width: 120px;
     height: 35px;
@@ -117,4 +134,5 @@ const Title = styled.p`
     justify-content: center;
     align-items: center;
     border-radius: 12px;
+    opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 `

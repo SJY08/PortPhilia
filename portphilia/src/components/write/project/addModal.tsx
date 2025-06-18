@@ -1,15 +1,17 @@
-import React, { useState } from "react"
+import type React from "react"
+import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import Input from "../../common/input"
 import TagInput from "../../write/tag/tagInput"
 import styled from "styled-components"
-import ProjectService from "../../../apis/project"
+import ProjectsService from "../../../apis/project"
+import type { ProjectType } from "../../../apis/project/type"
 
 interface Props {
     show: boolean
     setFunc: React.Dispatch<React.SetStateAction<boolean>>
-    onSuccess?: () => void
+    onSuccess?: (newProject: ProjectType) => void
 }
 
 function AddProjectModal({ show, setFunc, onSuccess }: Props) {
@@ -17,10 +19,13 @@ function AddProjectModal({ show, setFunc, onSuccess }: Props) {
     const [title, setTitle] = useState<string>("")
     const [explain, setExplain] = useState<string>("")
     const [iDo, setIDo] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const handleAddProject = async () => {
         try {
             if (title && skills.length && explain && iDo) {
+                setIsLoading(true)
+
                 const projectData = {
                     title,
                     description: explain,
@@ -28,11 +33,22 @@ function AddProjectModal({ show, setFunc, onSuccess }: Props) {
                     i_do: iDo,
                 }
 
-                const status = await ProjectService.addProject(projectData)
-                if (status === 201 || status === 200) {
+                const response = await ProjectsService.addProject(projectData)
+
+                if (
+                    (response.status === 201 || response.status === 200) &&
+                    response.data
+                ) {
                     alert("프로젝트가 성공적으로 추가되었습니다.")
+
+                    // 폼 초기화
+                    setTitle("")
+                    setExplain("")
+                    setIDo("")
+                    setSkills([])
+
                     setFunc(false)
-                    onSuccess && onSuccess()
+                    onSuccess && onSuccess(response.data)
                 } else {
                     alert("프로젝트 추가에 실패했습니다.")
                 }
@@ -41,13 +57,25 @@ function AddProjectModal({ show, setFunc, onSuccess }: Props) {
             }
         } catch (e) {
             console.error(e)
+            alert("프로젝트 추가 중 오류가 발생했습니다.")
+        } finally {
+            setIsLoading(false)
         }
+    }
+
+    const handleClose = () => {
+        // 모달 닫을 때 폼 초기화
+        setTitle("")
+        setExplain("")
+        setIDo("")
+        setSkills([])
+        setFunc(false)
     }
 
     return (
         <Modal
             show={show}
-            onHide={() => setFunc(false)}
+            onHide={handleClose}
             backdrop="static"
             keyboard={false}
             centered
@@ -82,11 +110,19 @@ function AddProjectModal({ show, setFunc, onSuccess }: Props) {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => setFunc(false)}>
+                <Button
+                    variant="secondary"
+                    onClick={handleClose}
+                    disabled={isLoading}
+                >
                     닫기
                 </Button>
-                <Button variant="primary" onClick={handleAddProject}>
-                    추가하기
+                <Button
+                    variant="primary"
+                    onClick={handleAddProject}
+                    disabled={isLoading}
+                >
+                    {isLoading ? "추가 중..." : "추가하기"}
                 </Button>
             </Modal.Footer>
         </Modal>

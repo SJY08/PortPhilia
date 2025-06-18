@@ -20,7 +20,6 @@ app.use(bodyParser.json({ limit: "50mb" }))
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
 app.use("/uploads", express.static("uploads"))
 
-// 라우팅 설정
 app.use("/auth", authRoutes)
 app.use("/user", userRoutes)
 app.use("/projects", projectRoutes)

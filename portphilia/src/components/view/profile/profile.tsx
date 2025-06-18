@@ -41,8 +41,9 @@ export default Profile
 const Container = styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
+    gap: 60px;
 `
 
 interface ImageProps {
@@ -62,7 +63,6 @@ const Image = styled.img<ImageProps>`
 
 const InfromContainer = styled.div`
     height: 250px;
-    margin-left: auto;
     display: flex;
     justify-content: start;
     align-items: start;
